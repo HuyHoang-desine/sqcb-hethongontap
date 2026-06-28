@@ -3,7 +3,7 @@
 const DEFAULT_ACCOUNTS = [
   { username: 'admin', password: 'admin123', role: 'super_admin', department: 'all', name: 'Quản trị viên Hệ thống' },
   { username: 'student', password: '123456', role: 'student', department: 'none', name: 'Nguyễn Văn An', trungDoi: 'Trung đội 1', daiDoi: 'Đại đội 1', tieuDoan: 'Tiểu đoàn 1' },
-  { username: 'developer', password: 'dev123', role: 'development', department: 'all', name: 'Nhà phát triển Hệ thống' }
+  { username: 'developer', password: 'dev966', role: 'development', department: 'all', name: 'Nhà phát triển Hệ thống' }
 ];
 
 const DEFAULT_DEPARTMENTS = {
