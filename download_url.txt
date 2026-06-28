@@ -1,0 +1,4 @@
+# Paste your Google Drive, OneDrive, or Zalo download link for SmartStudy.exe on the line below:
+# example: https://drive.google.com/uc?export=download&id=YOUR_FILE_ID
+# (Replace the line below with your link)
+https://drive.google.com/open?id=change-me-to-your-link

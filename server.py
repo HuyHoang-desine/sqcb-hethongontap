@@ -1,7 +1,7 @@
 import socket
 import os
 import json
-from flask import Flask, send_from_directory, request, jsonify, send_file, render_template_string
+from flask import Flask, send_from_directory, request, jsonify, send_file, render_template_string, redirect
 
 app = Flask(__name__, static_folder='.', static_url_path='')
 
@@ -82,31 +82,48 @@ def block_browsers():
 
 @app.route('/download/app')
 def download_app():
+    url_file = "download_url.txt"
+    target_url = None
+    
+    if os.path.exists(url_file):
+        try:
+            with open(url_file, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+                if lines:
+                    configured_url = lines[0].strip()
+                    if configured_url and not configured_url.startswith("#"):
+                        target_url = configured_url
+        except Exception as e:
+            print(f"Lỗi khi đọc file download_url.txt: {e}")
+            
+    if target_url:
+        return redirect(target_url)
+        
     exe_file = "SmartStudy.exe"
     if os.path.exists(exe_file):
         return send_file(exe_file, as_attachment=True)
-    else:
-        return """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Lỗi tải xuống</title>
-            <meta charset="utf-8">
-            <style>
-                body { background-color: #0b0f19; color: #94a3b8; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-                .box { border: 1px solid rgba(255,255,255,0.1); padding: 30px; border-radius: 12px; background: rgba(30,41,59,0.3); max-width: 450px; text-align: center; }
-                h2 { color: #f87171; }
-            </style>
-        </head>
-        <body>
-            <div class="box">
-                <h2>⚠️ File cài đặt chưa được tải lên</h2>
-                <p>File phần mềm <strong>SmartStudy.exe</strong> chưa được đưa lên máy chủ hoặc link tải trực tiếp chưa khả dụng.</p>
-                <p>Vui lòng liên hệ Ban quản trị để nhận file cài đặt ứng dụng trực tiếp qua USB, Zalo hoặc ổ đĩa dùng chung.</p>
-            </div>
-        </body>
-        </html>
-        """, 404
+        
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Lỗi tải xuống</title>
+        <meta charset="utf-8">
+        <style>
+            body { background-color: #0b0f19; color: #94a3b8; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+            .box { border: 1px solid rgba(255,255,255,0.1); padding: 30px; border-radius: 12px; background: rgba(30,41,59,0.3); max-width: 450px; text-align: center; }
+            h2 { color: #f87171; }
+        </style>
+    </head>
+    <body>
+        <div class="box">
+            <h2>⚠️ Link tải ứng dụng chưa được cấu hình</h2>
+            <p>Liên kết tải phần mềm <strong>SmartStudy.exe</strong> chưa được cấu hình hoặc chưa tải lên máy chủ.</p>
+            <p>Vui lòng mở file <strong>download_url.txt</strong> ở thư mục gốc của hệ thống và dán link tải (Google Drive, Zalo, OneDrive) vào dòng đầu tiên, sau đó lưu lại và cập nhật lên hệ thống.</p>
+        </div>
+    </body>
+    </html>
+    """, 404
 
 @app.route('/')
 def index():
