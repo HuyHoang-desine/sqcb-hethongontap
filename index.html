@@ -268,7 +268,6 @@
                       <option value="choice">Trắc nghiệm (4 Đáp án)</option>
                       <option value="essay">Tự luận (Hỏi & Trả lời tự do)</option>
                       <option value="interview">Thi Vấn Đáp (Ghi âm / AI chấm điểm)</option>
-                      <option value="graphic">Họa hình (Đẩy ảnh nền & Vẽ trên màn hình lớn)</option>
                     </select>
                   </div>
                   <div class="col-12">
@@ -321,46 +320,7 @@
                     </div>
                   </div>
 
-                  <!-- Graphic (Họa hình) fields -->
-                  <div id="pq-graphic-fields" class="row g-3 col-12 m-0 p-0 d-none">
-                    <div class="col-12 col-md-6">
-                      <label class="form-label text-secondary-light small fw-bold">Tải ảnh nền câu hỏi (.png, .jpg, .jpeg)</label>
-                      <input type="file" class="form-control bg-dark-glass text-light border-secondary" id="pq-graphic-image-file" accept="image/*" onchange="onGraphicImageUpload(event)">
-                      <!-- Hidden input to store Base64 representation of image -->
-                      <input type="hidden" id="pq-graphic-image-base64">
-                    </div>
-                    <div class="col-12 col-md-6">
-                      <label class="form-label text-secondary-light small fw-bold">Xem trước ảnh nền</label>
-                      <div class="border border-secondary rounded p-2 text-center" style="min-height: 100px; background: rgba(0,0,0,0.2);">
-                        <img id="pq-graphic-preview" style="max-height: 120px; max-width: 100%; display: none;" alt="Preview image">
-                        <span id="pq-graphic-preview-placeholder" class="text-secondary small">Chưa tải ảnh lên.</span>
-                      </div>
-                    </div>
-                    
-                    <div class="col-12">
-                      <label class="form-label text-info small fw-bold">Thanh công cụ làm bài thi (Tích chọn để hiển thị công cụ tương ứng)</label>
-                      <div class="d-flex flex-wrap gap-3 p-3 bg-dark-glass rounded border border-secondary">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="pq-tool-line" checked>
-                          <label class="form-check-label text-light small" for="pq-tool-line">
-                            Công cụ Line (Vẽ nét thẳng, nét đứt, mũi tên)
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="pq-tool-erase" checked>
-                          <label class="form-check-label text-light small" for="pq-tool-erase">
-                            Công cụ Erase (Tẩy nét vẽ)
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="pq-tool-tmtc" checked>
-                          <label class="form-check-label text-light small" for="pq-tool-tmtc">
-                            Hình tròn TMTC (Đóng dấu TMTC)
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+
 
                   <div class="col-12">
                     <label class="form-label text-secondary-light small">Giải thích chi tiết (Không bắt buộc)</label>
@@ -691,7 +651,9 @@
                 <label for="new-role" class="form-label text-secondary small fw-bold">Vai trò</label>
                 <select class="form-select bg-dark-glass text-light border-secondary" id="new-role" onchange="toggleNewUserDeptField()" required>
                   <option value="student">Học viên</option>
+                  <option value="faculty_admin">Giáo viên (Khoa)</option>
                   <option value="super_admin">Cán bộ</option>
+                  <option value="development">Developer</option>
                 </select>
               </div>
               <div class="mb-4 d-none" id="new-user-dept-container">
@@ -795,7 +757,9 @@
                 <label for="filter-user-role" class="text-secondary small fw-bold m-0" style="white-space: nowrap;">Lọc vai trò:</label>
                 <select id="filter-user-role" class="form-select form-select-sm bg-dark-glass text-light border-secondary" style="width: auto;" onchange="loadUsersTable()">
                   <option value="all">Tất cả</option>
+                  <option value="faculty_admin">Giáo viên</option>
                   <option value="super_admin">Cán bộ</option>
+                  <option value="development">Developer</option>
                   <option value="student">Học viên</option>
                 </select>
               </div>
