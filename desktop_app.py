@@ -14,6 +14,10 @@ class MainWindow(QMainWindow):
         # Tạo Web View để hiển thị ứng dụng
         self.web_view = QWebEngineView()
         
+        # Thiết lập User Agent tùy chỉnh để vượt qua rào cản bảo mật trên server
+        profile = self.web_view.page().profile()
+        profile.setHttpUserAgent("SmartStudyDesktopApp/1.0")
+        
         # Bật các cấu hình hỗ trợ Javascript, Local Storage
         settings = self.web_view.settings()
         settings.setAttribute(QWebEngineSettings.JavascriptEnabled, True)
