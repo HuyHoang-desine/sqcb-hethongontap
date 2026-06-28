@@ -1,5 +1,4 @@
 # Git ignore file for SmartStudy PWA
-database.json
 *.docx
 *.spec
 dist/

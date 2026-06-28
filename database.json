@@ -1,0 +1,898 @@
+{
+  "accounts": [
+    {
+      "department": "all",
+      "name": "Nhà phát triển Hệ thống",
+      "password": "170724dcsvn",
+      "role": "development",
+      "username": "developer"
+    },
+    {
+      "department": "none",
+      "name": "Hoàng Văn Thái",
+      "password": "hoangvanthai",
+      "role": "super_admin",
+      "username": "hoangvanthai"
+    },
+    {
+      "daiDoi": "Đại đội 4",
+      "department": "none",
+      "name": "Ngô Huy Hoàng",
+      "password": "ngohuyhoang",
+      "role": "student",
+      "tieuDoan": "Tiểu đoàn 2",
+      "trungDoi": "Trung đội 7",
+      "username": "ngohuyhoang"
+    }
+  ],
+  "departments": {
+    "K1": {
+      "color": "#ffb300",
+      "icon": "bi-people-fill",
+      "name": "Khoa Chiến thuật (K1)",
+      "subjects": [
+        {
+          "exams": [
+            {
+              "id": "ex_1782539966649",
+              "questions": [
+                {
+                  "barem": "ádf",
+                  "correct": "A",
+                  "explanation": "ádf",
+                  "id": "q_1782539957817_560",
+                  "keywords": [],
+                  "options": {
+                    "A": "",
+                    "B": "",
+                    "C": "",
+                    "D": ""
+                  },
+                  "question": "àd",
+                  "sampleAnswer": "ádf",
+                  "type": "essay"
+                }
+              ],
+              "year": "ád"
+            }
+          ],
+          "id": "sub_1782490255055",
+          "name": "BA - Chiến thuật Bộ binh 1",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782490267183",
+          "name": "BB - Chiến thuật Bộ binh 2",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782490284521",
+          "name": "PĐ - Chiến thuật Phân đội",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782490310632",
+          "name": "BH - Chiến thuật BHCT",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782490360961",
+          "name": "BĐ - Chiến thuật Bảo đảm Công binh",
+          "password": ""
+        }
+      ]
+    },
+    "K2": {
+      "color": "#2e7d32",
+      "icon": "bi-bookmark-star-fill",
+      "name": "Khoa Khoa học Xã hội và Nhân văn (K2)",
+      "subjects": [
+        {
+          "exams": [
+            {
+              "id": "ex_1782539535290",
+              "questions": [
+                {
+                  "barem": "",
+                  "correct": "A",
+                  "explanation": "",
+                  "id": "q_1782539516352_508",
+                  "keywords": [],
+                  "options": {
+                    "A": "a",
+                    "B": "ư",
+                    "C": "e",
+                    "D": "c"
+                  },
+                  "question": "ád",
+                  "sampleAnswer": "",
+                  "type": "choice"
+                }
+              ],
+              "year": "ád"
+            }
+          ],
+          "id": "sub_1782490727703",
+          "name": "TR - Triết học",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522639680",
+          "name": "KT - Kinh tế chính trị",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522663162",
+          "name": "CN - Chủ nghĩa xã hội khoa học",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522678594",
+          "name": "LS - Lịch sử Đảng Cộng sản Việt Nam",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522694697",
+          "name": "HM - Tư tưởng Hồ Chí Minh",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522713361",
+          "name": "LL - Lý luận chủ nghĩa Mác-Lênin",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522724817",
+          "name": "LD - Lịch sử dân tộc Việt Nam",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522739625",
+          "name": "LG - Logic học",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522752453",
+          "name": "ĐĐ - Đạo đức học quân sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522764179",
+          "name": "PL - Nhà nước và pháp luật",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522781754",
+          "name": "LV - Cơ sở văn hóa Việt Nam",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522789065",
+          "name": "TL - Tâm lý học quân sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522801705",
+          "name": "GD - Giáo dục học quân sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522829410",
+          "name": "TP - Tâm lý học sự phạm quân sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522850937",
+          "name": "LH - Lý luận dạy học đại học quân sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522874691",
+          "name": "LP - Lý luận sư phạm quân sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522883897",
+          "name": "SP - Sự phạm quân sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522895102",
+          "name": "DT - Dân tộc học và tôn giáo học",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522918061",
+          "name": "MQ - Mặt trận Tổ Quốc Việt Nam và các tổ chức chính trị-xã hội",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522941577",
+          "name": "LC - Đường lối, chính sách của Đảng, Nhà nước Việt Nam",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522950444",
+          "name": "XĐ - Xây dựng Đảng",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522961186",
+          "name": "QN - Quản lý hành chính nhà nước",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522974074",
+          "name": "KN - Kỹ năng lãnh đạo, quản lý",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782522982181",
+          "name": "BR - Bổ trợ",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782523001686",
+          "name": "TK - Thực tiễn và kinh nghiệm xây dựng, phát triển QĐNDVN",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782523026952",
+          "name": "FK - Phương pháp nghiên cứu khoa học",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782523043258",
+          "name": "CR - CTCT trong QĐNDVN",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782523062991",
+          "name": "CT - Công tác Đảng-Công tác Chính trị",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782523070616",
+          "name": "NG - Nhận thức giới",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782523077535",
+          "name": "GT - Giáo dục chính trị",
+          "password": ""
+        }
+      ]
+    },
+    "K3": {
+      "color": "#ff5300",
+      "icon": "bi-bricks",
+      "name": "Khoa Công trình (K3)",
+      "subjects": [
+        {
+          "exams": [],
+          "id": "sub_1782523104356",
+          "name": "BF - Công tác nổ",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782523113022",
+          "name": "BM - Vật cản Công binh",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782523129391",
+          "name": "CS - Công sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782523143669",
+          "name": "ĐU - Đường hầm-Thông hơi công trình",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572204359",
+          "name": "NL - Tiếng Việt chuyên ngành (Lào)",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572239582",
+          "name": "NT - Ngụy trang-Cung cấp nước",
+          "password": ""
+        }
+      ]
+    },
+    "K4": {
+      "color": "#0284c7",
+      "icon": "bi-water",
+      "name": "Khoa Cầu đường Vượt sông (K4)",
+      "subjects": [
+        {
+          "exams": [],
+          "id": "sub_1782572282160",
+          "name": "ĐQ - Đường quân sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572317801",
+          "name": "VS - Vượt sông",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572328541",
+          "name": "TĐ - Trắc địa",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572336080",
+          "name": "TV - Thủy văn",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572347715",
+          "name": "ĐS - Động lực học PT vượt sông",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572361416",
+          "name": "SY - Sân bay",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572376311",
+          "name": "NC - Tiếng Việt chuyên ngành (CPC)",
+          "password": ""
+        }
+      ]
+    },
+    "K5": {
+      "color": "#8b263e",
+      "icon": "bi-gear-fill",
+      "name": "Khoa Xe máy (K5)",
+      "subjects": [
+        {
+          "exams": [],
+          "id": "sub_1782572407209",
+          "name": "MC - Máy cơ sở",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572417021",
+          "name": "MB - Xe máy công trình",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572437433",
+          "name": "MV - Xe máy vượt sông",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572450177",
+          "name": "MK - Công tác kỹ thuật công binh",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572465332",
+          "name": "KĐ - Kỹ thuật điện, điện tử",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572472178",
+          "name": "TB - Thiết bị điện",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572488432",
+          "name": "KL - Vật liệu K, công nghệ kim loại",
+          "password": ""
+        }
+      ]
+    },
+    "K6": {
+      "color": "#bf55ec",
+      "icon": "bi-magnet-fill",
+      "name": "Khoa Cơ sở (K6)",
+      "subjects": [
+        {
+          "exams": [],
+          "id": "sub_1782572555186",
+          "name": "VK - Hình họa-Vẽ kỹ thuật",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572563263",
+          "name": "CL - Cơ học lý thuyết",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572573636",
+          "name": "SB - Sức bền vật liệu",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572584085",
+          "name": "CK - Cơ học kết cấu",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572597324",
+          "name": "CM - Cơ học đất, nền và móng",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572603841",
+          "name": "ĐC - Địa chất công trình",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572615337",
+          "name": "VX - Vật liệu xây dựng",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572627917",
+          "name": "KC - Kết cấu công trình",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572635388",
+          "name": "NM - Nguyên lý máy",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572650126",
+          "name": "CI - Chi tiết máy",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572658552",
+          "name": "NH - Nhiệt kỹ thuật",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572665279",
+          "name": "MT - Máy thủy lực",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572675251",
+          "name": "DS - Dung sai lắp ghép và đo lường",
+          "password": ""
+        }
+      ]
+    },
+    "K7": {
+      "color": "#ff007f",
+      "icon": "bi-calculator-fill",
+      "name": "Khoa Khoa học Cơ bản (K7)",
+      "subjects": [
+        {
+          "exams": [],
+          "id": "sub_1782572690709",
+          "name": "TN - Toán cao cấp",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572700291",
+          "name": "LY - Vật lý đại cương",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572707694",
+          "name": "HH - Hóa học đại cương",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572718854",
+          "name": "TH - Tin học",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572725631",
+          "name": "AB - Tiếng Anh cơ bản",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572733974",
+          "name": "AC - Tiếng Anh chuyên ngành",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572744029",
+          "name": "TT - Công nghệ thông tin",
+          "password": ""
+        }
+      ]
+    },
+    "K8": {
+      "color": "#9b59b6",
+      "icon": "bi-crosshair",
+      "name": "Khoa Quân sự chung (K8)",
+      "subjects": [
+        {
+          "exams": [],
+          "id": "sub_1782572756751",
+          "name": "ĐH - Địa hình quân sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572765619",
+          "name": "KB - Kỹ thuật chiến đấu bộ binh",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572771220",
+          "name": "ĐN - Điều lệnh",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572779599",
+          "name": "TM - Công tác tham mưu",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572787368",
+          "name": "VH - Vũ khí hủy diệt",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572794148",
+          "name": "FH - Phương pháp huấn luyện",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572805585",
+          "name": "TC - Thông tin-Tác chiến điện tử",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572814658",
+          "name": "ĐP - Công tác QS địa phương",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572821150",
+          "name": "LQ - Lịch sử quân sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572834894",
+          "name": "BC - Hiểu biết quân, binh chủng",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572844215",
+          "name": "ĐL - Đường lối quân sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572850494",
+          "name": "TD - Thể thao quân sự",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572856930",
+          "name": "HC - Hậu cần kỹ thuật",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572862895",
+          "name": "HY - Hậu cần quân y",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572889000",
+          "name": "ĐV - Động viên quân đội",
+          "password": ""
+        },
+        {
+          "exams": [],
+          "id": "sub_1782572897136",
+          "name": "SĐ - Sẵn sàng chiến đấu",
+          "password": ""
+        }
+      ]
+    }
+  },
+  "results": [
+    {
+      "correctCount": 1,
+      "daiDoi": "Đại đội 2",
+      "date": "2026-06-26 13:05",
+      "departmentId": "K2",
+      "departmentName": "Khoa Khoa học Xã hội và Nhân văn (K2)",
+      "examYear": "Đề thi năm 2023",
+      "id": "res5",
+      "score": 5,
+      "studentName": "Cao Hoàng Bách",
+      "subjectName": "Mật mã học cơ sở",
+      "tieuDoan": "Tiểu đoàn 1",
+      "totalQuestions": 2,
+      "trungDoi": "Trung đội 3",
+      "unit": "Trung đội 3 - Đại đội 2 - Tiểu đoàn 1"
+    },
+    {
+      "correctCount": 2,
+      "daiDoi": "Đại đội 2",
+      "date": "2026-06-26 11:20",
+      "departmentId": "K2",
+      "departmentName": "Khoa Khoa học Xã hội và Nhân văn (K2)",
+      "examYear": "Đề thi năm 2023",
+      "id": "res4",
+      "score": 10,
+      "studentName": "Vũ Đức Duy",
+      "subjectName": "Mật mã học cơ sở",
+      "tieuDoan": "Tiểu đoàn 1",
+      "totalQuestions": 2,
+      "trungDoi": "Trung đội 3",
+      "unit": "Trung đội 3 - Đại đội 2 - Tiểu đoàn 1"
+    },
+    {
+      "correctCount": 1,
+      "daiDoi": "Đại đội 1",
+      "date": "2026-06-26 09:12",
+      "departmentId": "K1",
+      "departmentName": "Khoa Chiến thuật (K1)",
+      "examYear": "Đề thi năm 2023",
+      "id": "res3",
+      "score": 3.3,
+      "studentName": "Bùi Thị Hà",
+      "subjectName": "Lập trình Hướng đối tượng",
+      "tieuDoan": "Tiểu đoàn 1",
+      "totalQuestions": 3,
+      "trungDoi": "Trung đội 2",
+      "unit": "Trung đội 2 - Đại đội 1 - Tiểu đoàn 1"
+    },
+    {
+      "correctCount": 3,
+      "daiDoi": "Đại đội 1",
+      "date": "2026-06-25 15:10",
+      "departmentId": "K1",
+      "departmentName": "Khoa Chiến thuật (K1)",
+      "examYear": "Đề thi năm 2023",
+      "id": "res2",
+      "score": 10,
+      "studentName": "An Đình Phong",
+      "subjectName": "Lập trình Hướng đối tượng",
+      "tieuDoan": "Tiểu đoàn 1",
+      "totalQuestions": 3,
+      "trungDoi": "Trung đội 1",
+      "unit": "Trung đội 1 - Đại đội 1 - Tiểu đoàn 1"
+    },
+    {
+      "correctCount": 2,
+      "daiDoi": "Đại đội 1",
+      "date": "2026-06-25 14:32",
+      "departmentId": "K1",
+      "departmentName": "Khoa Chiến thuật (K1)",
+      "examYear": "Đề thi năm 2023",
+      "id": "res1",
+      "score": 6.7,
+      "studentName": "Trần Minh Quân",
+      "subjectName": "Lập trình Hướng đối tượng",
+      "tieuDoan": "Tiểu đoàn 1",
+      "totalQuestions": 3,
+      "trungDoi": "Trung đội 1",
+      "unit": "Trung đội 1 - Đại đội 1 - Tiểu đoàn 1"
+    },
+    {
+      "aiEvaluationResults": {},
+      "correctCount": 0,
+      "daiDoi": "",
+      "date": "2026-06-26 23:06",
+      "departmentId": "K2",
+      "departmentName": "Khoa Khoa học Xã hội và Nhân văn (K2)",
+      "examYear": "Đề thi năm 2023",
+      "id": "res_1782489983871",
+      "score": 5,
+      "studentName": "Quản trị viên Hệ thống",
+      "subjectName": "Mật mã học cơ sở",
+      "tieuDoan": "",
+      "totalQuestions": 2,
+      "trungDoi": "",
+      "unit": "Tự do"
+    },
+    {
+      "aiEvaluationResults": {
+        "0": {
+          "accuracy": "Không có thông tin kiến thức.",
+          "barem_breakdown": "- Câu trả lời quá ngắn hoặc bỏ trống: 0 điểm.\n- Không đáp ứng bất kỳ tiêu chí nào của Barem.",
+          "feedback": "Bạn cần tích cực trả lời hoặc nói to rõ ràng vào microphone để hệ thống ghi nhận.",
+          "fluency": "Chưa diễn đạt (Quá ngắn).",
+          "score": 0
+        }
+      },
+      "correctCount": 0,
+      "daiDoi": "",
+      "date": "2026-06-26 23:14",
+      "departmentId": "K1",
+      "departmentName": "Khoa Chiến thuật (K1)",
+      "examYear": "a",
+      "id": "res_1782490447160",
+      "score": 0,
+      "studentName": "Quản trị viên Hệ thống",
+      "subjectName": "BA - Chiến thuật Bộ binh 1",
+      "tieuDoan": "",
+      "totalQuestions": 1,
+      "trungDoi": "",
+      "unit": "Tự do"
+    },
+    {
+      "aiEvaluationResults": {
+        "0": {
+          "accuracy": "Kiến thức chuẩn xác, đầy đủ các thuật ngữ chuyên ngành.",
+          "barem_breakdown": "✓ [Đạt] 1. Trả lời đúng 10 điểm (+10đ)",
+          "feedback": "Rất tốt! Bạn đã nắm vững kiến thức nền tảng và diễn đạt mạch lạc. Hãy phát huy cách trả lời này trong phòng thi vấn đáp.",
+          "fluency": "Nội dung nói hơi ngắn, cần trình bày lưu loát và mở rộng câu trả lời hơn.",
+          "score": 10
+        }
+      },
+      "correctCount": 0,
+      "daiDoi": "",
+      "date": "2026-06-26 23:16",
+      "departmentId": "K1",
+      "departmentName": "Khoa Chiến thuật (K1)",
+      "examYear": "a",
+      "id": "res_1782490604732",
+      "score": 10,
+      "studentName": "Quản trị viên Hệ thống",
+      "subjectName": "BA - Chiến thuật Bộ binh 1",
+      "tieuDoan": "",
+      "totalQuestions": 1,
+      "trungDoi": "",
+      "unit": "Tự do"
+    },
+    {
+      "aiEvaluationResults": {},
+      "correctCount": 0,
+      "daiDoi": "",
+      "date": "2026-06-27 12:52",
+      "departmentId": "K2",
+      "departmentName": "Khoa Khoa học Xã hội và Nhân văn (K2)",
+      "examYear": "ád",
+      "id": "res_1782539544010",
+      "score": 0,
+      "studentName": "Quản trị viên Hệ thống",
+      "subjectName": "TR - Triết học",
+      "tieuDoan": "",
+      "totalQuestions": 1,
+      "trungDoi": "",
+      "unit": "Tự do"
+    },
+    {
+      "aiEvaluationResults": {
+        "0": {
+          "accuracy": "Không có thông tin kiến thức.",
+          "barem_breakdown": "- Câu trả lời quá ngắn hoặc bỏ trống: 0 điểm.\n- Không đáp ứng bất kỳ tiêu chí nào của Barem.",
+          "feedback": "Bạn cần tích cực trả lời hoặc nói to rõ ràng vào microphone để hệ thống ghi nhận.",
+          "fluency": "Chưa diễn đạt (Quá ngắn).",
+          "score": 0
+        }
+      },
+      "correctCount": 0,
+      "daiDoi": "",
+      "date": "2026-06-27 12:59",
+      "departmentId": "K1",
+      "departmentName": "Khoa Chiến thuật (K1)",
+      "examYear": "ád",
+      "id": "res_1782539976425",
+      "score": 0,
+      "studentName": "Quản trị viên Hệ thống",
+      "subjectName": "BA - Chiến thuật Bộ binh 1",
+      "tieuDoan": "",
+      "totalQuestions": 1,
+      "trungDoi": "",
+      "unit": "Tự do"
+    }
+  ],
+  "personalQuestions": [
+    {
+      "correct": "A",
+      "deptId": "K1",
+      "explanation": "",
+      "id": "pq_1782603802131_yvnbwbvkp",
+      "options": {
+        "A": "sdf",
+        "B": "sdf",
+        "C": "sdf",
+        "D": "sdf"
+      },
+      "question": "ưeg",
+      "subjectId": "sub_1782490255055",
+      "type": "choice"
+    }
+  ],
+  "deletedDefaultAccounts": [
+    "gv_k3",
+    "gv_k1",
+    "bgh",
+    "gv_k2",
+    "admin",
+    "student"
+  ],
+  "announcement": "Vì lý do bảo mật, tuyệt đối không đưa tài khoản cho cá nhân khác sử dụng",
+  "comments": {
+    "sub_1782490255055": []
+  }
+}
