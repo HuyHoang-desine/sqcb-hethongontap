@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      fetch('/log-error', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: message,
+          source: source,
+          lineno: lineno,
+          colno: colno,
+          error: error ? error.stack : ''
+        })
+      });
+    };
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trường SQCB</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Phần mềm học tập và thi thử trực tuyến dành cho các khoa từ K1 đến K8. Quản lý câu hỏi cá nhân và kết quả thi hệ thống.">
+  <meta name="author" content="Antigravity Agent">
+  <!-- PWA Support -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a0e14">
+  <link rel="icon" type="image/png" href="logo_sqcb.png">
+  <link rel="apple-touch-icon" href="logo_sqcb.png">
+  
+  <!-- CSS Stylesheets -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=18">
+</head>
+<body>
+  
+  <!-- BACKGROUND GRADIENTS & BLURS -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <!-- NAVIGATION BAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-blur border-bottom border-secondary sticky-top d-none" id="main-nav">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#" onclick="navigateTo('dashboard')">
+        <img src="logo_sqcb.png?v=2" alt="Logo SQCB" style="height: 36px; width: 36px; object-fit: cover; border-radius: 50%;">
+        <span class="fw-bold tracking-wide text-uppercase fs-5 text-white" style="color: #ffffff !important;">Trường SQCB</span>
+      </a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-2">
+          <li class="nav-item">
+            <a class="nav-link active" id="nav-dashboard" href="#" onclick="navigateTo('dashboard')">Trang chủ</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="nav-personal" href="#" onclick="navigateTo('personal')">Cá nhân</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="nav-system" href="#" onclick="navigateTo('system')">Đề cương ôn tập</a>
+          </li>
+          <li class="nav-item d-none" id="nav-results-item">
+            <a class="nav-link" id="nav-results" href="#" onclick="navigateTo('results')">Kết quả thi</a>
+          </li>
+          <li class="nav-item d-none" id="nav-admin-item">
+            <a class="nav-link" id="nav-admin" href="#" onclick="navigateTo('admin')">Quản lý Tài khoản</a>
+          </li>
+        </ul>
+        <div class="d-flex align-items-center gap-3">
+          <div class="d-flex flex-column text-end">
+            <span class="fw-semibold text-info" id="user-display-name">Học viên</span>
+            <span class="small text-secondary" id="user-display-role">Học viên</span>
+          </div>
+          <!-- Theme Toggle Button -->
+          <button type="button" class="btn btn-outline-light btn-sm rounded-circle d-flex align-items-center justify-content-center" id="theme-toggle-btn" onclick="toggleTheme()" title="Chuyển chế độ Sáng/Tối" style="width: 32px; height: 32px;">
+            <i class="bi bi-moon-fill text-white" id="theme-toggle-icon"></i>
+          </button>
+          <button class="btn btn-outline-info btn-sm rounded-pill px-3 d-none" id="btn-edit-profile-name" onclick="openEditProfileNameModal()">
+            <i class="bi bi-person-gear me-1"></i>Sửa họ tên
+          </button>
+          <button class="btn btn-outline-warning btn-sm rounded-pill px-3" onclick="openChangePasswordModal()">
+            <i class="bi bi-key-fill me-1"></i>Đổi mật khẩu
+          </button>
+          <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="logout()">
+            <i class="bi bi-box-arrow-right me-1"></i>Đăng xuất
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main class="container py-4 my-md-3">
+    
+    <!-- ==============================================
+         1. SECURITY LOGIN VIEW
+         ============================================== -->
+    <section id="login-view" class="view-section">
+      <div class="row justify-content-center align-items-center min-vh-75">
+        <div class="col-12 col-md-8 col-lg-5">
+          <div class="card glass-card border-secondary text-center p-4 p-md-5 my-5">
+            <div class="login-header mb-4">
+              <div class="logo-wrap mb-3 mx-auto">
+                <img src="logo_sqcb.png?v=2" alt="Logo SQCB" style="height: 80px; width: 80px; object-fit: cover; border-radius: 50%;">
+              </div>
+              <h1 class="h3 fw-bold text-light text-uppercase">HỆ THỐNG ÔN TẬP</h1>
+              <p class="text-secondary small mt-2">Trường Sĩ quan Công binh</p>
+            </div>
+            
+            <div class="alert alert-warning-glass border-warning text-warning-light text-start p-3 mb-4 rounded-3 d-flex gap-2 align-items-center">
+              <i class="bi bi-megaphone-fill fs-5 flex-shrink-0"></i>
+              <div class="d-flex align-items-center flex-grow-1 overflow-hidden w-100">
+                <span class="fw-bold me-2 text-warning" style="white-space: nowrap; z-index: 2; padding-right: 5px;">Thông báo:</span>
+                <div class="flex-grow-1 position-relative overflow-hidden" style="height: 24px;">
+                  <span id="login-announcement-marquee" class="custom-marquee-text">
+                    Vì mục đích bảo mật, vui lòng sử dụng tài khoản và mật khẩu của đơn vị thuộc quyền cấp phát.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <form id="login-form" onsubmit="handleLogin(event)">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="login-username" placeholder="Tên đăng nhập" required autocomplete="username">
+                <label for="login-username" class="text-secondary">Tên đăng nhập</label>
+              </div>
+              <div class="form-floating mb-4">
+                <input type="password" class="form-control bg-dark-glass text-light border-secondary" id="login-password" placeholder="Mật khẩu" required autocomplete="current-password">
+                <label for="login-password" class="text-secondary">Mật khẩu</label>
+              </div>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg rounded-pill glow-button py-2">
+                  <i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập hệ thống
+                </button>
+              </div>
+            </form>
+            
+            <div class="mt-4 pt-3 border-top border-secondary text-start">
+              <p class="small text-secondary mb-1">Tài khoản trải nghiệm nhanh:</p>
+              <div class="d-flex flex-wrap gap-2 align-items-center">
+                <button class="btn btn-dark-glass btn-sm border-secondary text-secondary-light py-1 px-2" onclick="fillDemoAcc('ngohuyhoang', 'ngohuyhoang')">Học viên</button>
+                <button class="btn btn-dark-glass btn-sm border-secondary text-secondary-light py-1 px-2" onclick="fillDemoAcc('hoangvanthai', 'hoangvanthai')">Cán bộ</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         2. DASHBOARD VIEW (MAIN CHOOSE)
+         ============================================== -->
+    <section id="dashboard-view" class="view-section d-none">
+      <div class="row mb-4">
+        <div class="col-12 text-center text-md-start">
+          <h2 class="fw-bold tracking-tight text-gradient-cyan">Chào mừng trở lại!</h2>
+          <p class="text-secondary">Chọn phân hệ học tập bạn muốn tham gia ngày hôm nay.</p>
+        </div>
+      </div>
+      
+      <div class="row g-4 justify-content-center">
+        <!-- Cá nhân Card -->
+        <div class="col-12 col-md-6">
+          <div class="card glass-card hover-glow-blue border-secondary h-100 p-4 d-flex flex-column justify-content-between pointer" onclick="navigateTo('personal')">
+            <div>
+              <div class="icon-shape rounded-4 bg-primary-glass text-info mb-4">
+                <i class="bi bi-person-workspace fs-2"></i>
+              </div>
+              <h3 class="h4 fw-bold text-light">CÁ NHÂN</h3>
+              <p class="text-secondary mt-2">Tự xây dựng bộ câu hỏi học tập riêng. Hỗ trợ tự soạn câu hỏi trắc nghiệm, tự luận, tự luyện tập và tự làm bài kiểm tra để đánh giá năng lực bản thân.</p>
+            </div>
+            <div class="mt-4 d-flex align-items-center text-info gap-2 fw-semibold">
+              Khám phá phân hệ <i class="bi bi-arrow-right"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hệ thống Card -->
+        <div class="col-12 col-md-6">
+          <div class="card glass-card hover-glow-purple border-secondary h-100 p-4 d-flex flex-column justify-content-between pointer" onclick="navigateTo('system')">
+            <div>
+              <div class="icon-shape rounded-4 bg-purple-glass text-purple-light mb-4">
+                <i class="bi bi-building-gear fs-2"></i>
+              </div>
+              <h3 class="h4 fw-bold text-light">ĐỀ CƯƠNG ÔN TẬP</h3>
+              <p class="text-secondary mt-2">Học tập theo đề cương ôn tập chuẩn. Khám phá 8 khoa (K1 - K8) với các môn chuyên ngành và bộ đề thi chính thức qua các năm học.</p>
+            </div>
+            <div class="mt-4 d-flex align-items-center text-purple-light gap-2 fw-semibold">
+              Vào học đề cương <i class="bi bi-arrow-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         3. PERSONAL VIEW (CÁ NHÂN)
+         ============================================== -->
+    <section id="personal-view" class="view-section d-none">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+          <h2 class="fw-bold text-gradient-cyan m-0">Khu vực Cá nhân</h2>
+          <p class="text-secondary m-0">Tự tạo câu hỏi và thực hành kiểm tra kỹ năng</p>
+        </div>
+        <button class="btn btn-outline-light rounded-pill px-3" onclick="navigateTo('dashboard')">
+          <i class="bi bi-arrow-left me-1"></i>Trở lại Dashboard
+        </button>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <div class="card glass-card border-secondary p-2 mb-4">
+        <ul class="nav nav-pills nav-fill gap-1" id="personal-tabs">
+          <li class="nav-item">
+            <button class="nav-link rounded-pill py-2 text-light active" id="tab-btn-practice" onclick="switchPersonalTab('practice')">
+              <i class="bi bi-play-circle me-2"></i>Luyện tập
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link rounded-pill py-2 text-light" id="tab-btn-test" onclick="switchPersonalTab('test')">
+              <i class="bi bi-card-checklist me-2"></i>Kiểm tra
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link rounded-pill py-2 text-light" id="tab-btn-add" onclick="switchPersonalTab('add')">
+              <i class="bi bi-plus-circle me-2"></i>Thêm câu hỏi
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab Contents -->
+      <div id="personal-tab-contents">
+        <!-- 3.1 Thêm câu hỏi Tab -->
+        <div id="personal-tab-add" class="personal-tab d-none">
+          <div class="card glass-card border-secondary p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+              <h3 class="h5 fw-bold text-light m-0">Tạo Câu Hỏi Mới</h3>
+              <button type="button" class="btn btn-outline-info btn-sm rounded-pill fw-bold px-3" onclick="openPersonalImportModal()" title="Nhập danh sách câu hỏi từ file Word hoặc Excel">
+                <i class="bi bi-file-earmark-arrow-up me-1"></i>Nhập câu hỏi từ tệp (Word/Excel)
+              </button>
+            </div>
+            <form id="add-personal-q-form" onsubmit="savePersonalQuestion(event)">
+              <div class="row g-3">
+                <!-- Dropdown selectors -->
+                <div class="col-12 col-md-6">
+                  <label class="form-label text-secondary-light small fw-bold">Chọn Khoa</label>
+                  <select class="form-select bg-dark-glass text-light border-secondary" id="pq-select-dept" onchange="onPersonalAddDeptChange()" required>
+                    <option value="" disabled selected>Chọn Khoa...</option>
+                    <option value="K1">Khoa Chiến thuật (K1)</option>
+                    <option value="K2">Khoa Khoa học Xã hội và Nhân văn (K2)</option>
+                    <option value="K3">Khoa Công trình (K3)</option>
+                    <option value="K4">Khoa Cầu đường Vượt sông (K4)</option>
+                    <option value="K5">Khoa Xe máy (K5)</option>
+                    <option value="K6">Khoa Cơ sở (K6)</option>
+                    <option value="K7">Khoa Khoa học Cơ bản (K7)</option>
+                    <option value="K8">Khoa Quân sự chung (K8)</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label text-secondary-light small fw-bold">Chọn Môn học chuyên ngành</label>
+                  <select class="form-select bg-dark-glass text-light border-secondary" id="pq-select-subject" onchange="onPersonalAddSubjectChange()" required disabled>
+                    <option value="" disabled selected>Chọn môn học...</option>
+                  </select>
+                </div>
+
+                <!-- Collapsible Question Fields container -->
+                <div id="pq-form-fields-container" class="row g-3 col-12 m-0 p-0 d-none">
+                  <div class="col-12 col-md-6">
+                    <label class="form-label text-secondary-light small fw-bold">Loại câu hỏi</label>
+                    <select class="form-select bg-dark-glass text-light border-secondary" id="pq-type" onchange="togglePersonalQFields()" required>
+                      <option value="choice">Trắc nghiệm (4 Đáp án)</option>
+                      <option value="essay">Tự luận (Hỏi & Trả lời tự do)</option>
+                      <option value="interview">Thi Vấn Đáp (Ghi âm / AI chấm điểm)</option>
+                      <option value="graphic">Họa hình (Đẩy ảnh nền & Vẽ trên màn hình lớn)</option>
+                    </select>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label text-secondary-light small fw-bold">Nội dung câu hỏi</label>
+                    <textarea class="form-control bg-dark-glass text-light border-secondary" id="pq-question" rows="3" placeholder="Nhập câu hỏi của bạn tại đây..." required></textarea>
+                  </div>
+                  
+                  <!-- Choice fields -->
+                  <div id="pq-choice-fields" class="row g-3 col-12 m-0 p-0">
+                    <div class="col-12 col-md-6">
+                      <label class="form-label text-secondary-light small">Đáp án A</label>
+                      <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="pq-optA" placeholder="Nhập lựa chọn A">
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label class="form-label text-secondary-light small">Đáp án B</label>
+                      <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="pq-optB" placeholder="Nhập lựa chọn B">
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label class="form-label text-secondary-light small">Đáp án C</label>
+                      <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="pq-optC" placeholder="Nhập lựa chọn C">
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label class="form-label text-secondary-light small">Đáp án D</label>
+                      <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="pq-optD" placeholder="Nhập lựa chọn D">
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label class="form-label text-secondary-light small fw-bold text-info">Đáp án đúng</label>
+                      <select class="form-select bg-dark-glass text-info border-secondary" id="pq-correct">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Essay & Interview fields -->
+                  <div id="pq-essay-fields" class="row g-3 col-12 m-0 p-0 d-none">
+                    <div class="col-12">
+                      <label class="form-label text-secondary-light small fw-bold text-info">Đáp án mẫu / Gợi ý trả lời</label>
+                      <textarea class="form-control bg-dark-glass text-light border-secondary" id="pq-sample" rows="3" placeholder="Nhập đáp án mẫu để đối chiếu hoặc để AI so sánh..."></textarea>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label text-info small fw-bold">Barem điểm chi tiết (AI sẽ chấm dựa trên barem này)</label>
+                      <textarea class="form-control bg-dark-glass text-light border-secondary" id="pq-barem" rows="3" placeholder="Ví dụ:&#10;1. Nêu đúng định nghĩa: 4 điểm&#10;2. Giải thích cơ chế hoạt động: 4 điểm&#10;3. Đưa ra ví dụ minh họa: 2 điểm"></textarea>
+                    </div>
+                    <div class="col-12" id="pq-keywords-container">
+                      <label class="form-label text-secondary small fw-bold">Từ khóa cốt lõi (Cách nhau bằng dấu phẩy, dùng khi offline/không có key)</label>
+                      <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="pq-keywords" placeholder="Ví dụ: đa hình, nạp chồng, ghi đè, overload, override">
+                    </div>
+                  </div>
+
+                  <!-- Graphic (Họa hình) fields -->
+                  <div id="pq-graphic-fields" class="row g-3 col-12 m-0 p-0 d-none">
+                    <div class="col-12 col-md-6">
+                      <label class="form-label text-secondary-light small fw-bold">Tải ảnh nền câu hỏi (.png, .jpg, .jpeg)</label>
+                      <input type="file" class="form-control bg-dark-glass text-light border-secondary" id="pq-graphic-image-file" accept="image/*" onchange="onGraphicImageUpload(event)">
+                      <!-- Hidden input to store Base64 representation of image -->
+                      <input type="hidden" id="pq-graphic-image-base64">
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label class="form-label text-secondary-light small fw-bold">Xem trước ảnh nền</label>
+                      <div class="border border-secondary rounded p-2 text-center" style="min-height: 100px; background: rgba(0,0,0,0.2);">
+                        <img id="pq-graphic-preview" style="max-height: 120px; max-width: 100%; display: none;" alt="Preview image">
+                        <span id="pq-graphic-preview-placeholder" class="text-secondary small">Chưa tải ảnh lên.</span>
+                      </div>
+                    </div>
+                    
+                    <div class="col-12">
+                      <label class="form-label text-info small fw-bold">Thanh công cụ làm bài thi (Tích chọn để hiển thị công cụ tương ứng)</label>
+                      <div class="d-flex flex-wrap gap-3 p-3 bg-dark-glass rounded border border-secondary">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="pq-tool-line" checked>
+                          <label class="form-check-label text-light small" for="pq-tool-line">
+                            Công cụ Line (Vẽ nét thẳng, nét đứt, mũi tên)
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="pq-tool-erase" checked>
+                          <label class="form-check-label text-light small" for="pq-tool-erase">
+                            Công cụ Erase (Tẩy nét vẽ)
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="pq-tool-tmtc" checked>
+                          <label class="form-check-label text-light small" for="pq-tool-tmtc">
+                            Hình tròn TMTC (Đóng dấu TMTC)
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label text-secondary-light small">Giải thích chi tiết (Không bắt buộc)</label>
+                    <textarea class="form-control bg-dark-glass text-light border-secondary" id="pq-explanation" rows="2" placeholder="Giải thích tại sao đáp án đó lại đúng..."></textarea>
+                  </div>
+                  
+                  <div class="col-12 d-flex gap-2 justify-content-end mt-4">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" onclick="resetPersonalQForm()">Làm lại</button>
+                    <button type="submit" class="btn btn-info text-dark rounded-pill px-4 fw-bold">
+                      <i class="bi bi-save me-2"></i>Lưu câu hỏi
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- 3.2 Luyện tập Tab -->
+        <div id="personal-tab-practice" class="personal-tab">
+          <div class="row g-4">
+            <!-- Left: selectors for Department & Subject -->
+            <div class="col-12 col-lg-4">
+              <div class="card glass-card border-secondary p-3 h-100">
+                <h4 class="h6 fw-bold text-light mb-3"><i class="bi bi-funnel-fill text-info me-2"></i>Bộ lọc Chuyên ngành</h4>
+                
+                <div class="mb-3">
+                  <label class="form-label text-secondary small fw-bold">Khoa</label>
+                  <select class="form-select bg-dark-glass text-light border-secondary rounded-pill" id="personal-practice-dept" onchange="onPersonalPracticeDeptChange()">
+                    <option value="" disabled selected>Chọn Khoa...</option>
+                    <option value="K1">Khoa Chiến thuật (K1)</option>
+                    <option value="K2">Khoa Khoa học Xã hội và Nhân văn (K2)</option>
+                    <option value="K3">Khoa Công trình (K3)</option>
+                    <option value="K4">Khoa Cầu đường Vượt sông (K4)</option>
+                    <option value="K5">Khoa Xe máy (K5)</option>
+                    <option value="K6">Khoa Cơ sở (K6)</option>
+                    <option value="K7">Khoa Khoa học Cơ bản (K7)</option>
+                    <option value="K8">Khoa Quân sự chung (K8)</option>
+                  </select>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label text-secondary small fw-bold">Môn học</label>
+                  <select class="form-select bg-dark-glass text-light border-secondary rounded-pill" id="personal-practice-subject" onchange="onPersonalPracticeSubjectChange()" disabled>
+                    <option value="" disabled selected>Chọn môn học...</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Right: List of questions and practice interface -->
+            <div class="col-12 col-lg-8">
+              <div class="card glass-card border-secondary p-4 h-100" id="personal-practice-display">
+                <div class="text-center py-5 my-5 text-secondary">
+                  <i class="bi bi-arrow-left-right fs-1 d-block mb-3 text-info"></i>
+                  <h4 class="text-light">Luyện tập câu hỏi cá nhân</h4>
+                  <p class="small max-w-400 mx-auto">Vui lòng chọn Khoa và Môn học bên trái để hiển thị danh sách câu hỏi ôn tập cá nhân.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.3 Kiểm tra Tab -->
+        <div id="personal-tab-test" class="personal-tab d-none">
+          <div class="card glass-card border-secondary p-4 text-center" id="personal-test-setup">
+            <i class="bi bi-clock-history text-info fs-1 d-block mb-3"></i>
+            <h3 class="h4 fw-bold text-light">Bắt đầu Bài kiểm tra Cá nhân</h3>
+            <p class="text-secondary max-w-500 mx-auto my-3">Bài kiểm tra sẽ tạo ngẫu nhiên một đề thi từ danh sách câu hỏi cá nhân của bạn. Đề thi sẽ tự luận hoặc trắc nghiệm tùy thuộc vào các câu hỏi bạn đã thêm.</p>
+            
+            <div class="d-flex justify-content-center align-items-center gap-3 my-4 flex-wrap">
+              <div style="min-width: 160px;">
+                <label class="form-label text-secondary small d-block mb-1">Số lượng câu hỏi</label>
+                <input type="number" class="form-control bg-dark-glass text-light border-secondary rounded-pill px-3 text-center" id="test-q-limit" min="1" placeholder="Số câu (Ví dụ: 10)" required>
+              </div>
+              <div style="min-width: 160px;">
+                <label class="form-label text-secondary small d-block mb-1">Thời gian (phút)</label>
+                <input type="number" class="form-control bg-dark-glass text-light border-secondary rounded-pill px-3 text-center" id="test-time-limit" min="1" placeholder="Số phút (Ví dụ: 15)" required>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-lg rounded-pill glow-button px-5 py-2 mt-2" onclick="startPersonalTest()">
+              <i class="bi bi-play-fill me-2"></i>Bắt đầu thi ngay
+            </button>
+          </div>
+
+          <div class="d-none" id="personal-test-runner">
+            <!-- JS generates test runner: questions list with time counting down -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         4. SYSTEM VIEW (HỆ THỐNG - 8 KHOA)
+         ============================================== -->
+    <section id="system-view" class="view-section d-none">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4" id="system-header">
+        <div>
+          <h2 class="fw-bold text-gradient-purple m-0">Đề cương ôn tập</h2>
+          <p class="text-secondary m-0">Khám phá các đề cương ôn tập chuyên ngành và đề thi chính thức</p>
+        </div>
+        <button class="btn btn-outline-light rounded-pill px-3" onclick="navigateTo('dashboard')">
+          <i class="bi bi-arrow-left me-1"></i>Trở lại Dashboard
+        </button>
+      </div>
+
+      <!-- Navigation breadcrumb-like path -->
+      <div class="mb-3 d-none" id="system-breadcrumb">
+        <button class="btn btn-sm btn-dark-glass border-secondary rounded-pill text-secondary px-3" onclick="backToDepartments()">
+          <i class="bi bi-grid-fill me-1"></i>Danh sách Khoa
+        </button>
+        <span class="text-secondary px-2">/</span>
+        <button class="btn btn-sm btn-dark-glass border-secondary rounded-pill text-secondary px-3 d-none" id="bc-department" onclick="backToSubjects()">
+          Khoa
+        </button>
+        <span class="text-secondary px-2 d-none" id="bc-sep-subject">/</span>
+        <span class="text-info small fw-bold d-none" id="bc-subject">Môn học</span>
+      </div>
+
+      <!-- Subviews of System -->
+      <!-- 4.1 Departments Grid (Default view) -->
+      <div id="system-departments-grid" class="row g-4">
+        <!-- JS fills 8 K1 to K8 department cards here -->
+      </div>
+
+      <!-- 4.2 Subjects List View -->
+      <div id="system-subjects-container" class="d-none">
+        <div class="card glass-card border-secondary p-4 mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary">
+            <div>
+              <h3 class="h4 fw-bold text-light m-0" id="current-dept-name">Tên Khoa</h3>
+              <p class="text-secondary small m-0">Chọn môn học chuyên ngành</p>
+            </div>
+            <button class="btn btn-success btn-sm rounded-pill px-3 d-none" id="add-subject-btn" onclick="openAddSubjectModal()">
+              <i class="bi bi-plus-circle me-1"></i>Thêm Môn Học
+            </button>
+          </div>
+          <div class="row g-3" id="system-subjects-list">
+            <!-- JS inserts subject cards here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 4.3 Exams List View -->
+      <div id="system-exams-container" class="d-none">
+        <div class="card glass-card border-secondary p-4 mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary">
+            <div>
+              <h3 class="h4 fw-bold text-info m-0" id="current-subject-name">Tên Môn học</h3>
+              <p class="text-secondary small m-0">Danh sách bộ đề thi qua các năm</p>
+            </div>
+            <button class="btn btn-success btn-sm rounded-pill px-3 d-none" id="add-exam-btn" onclick="openAddExamModal()">
+              <i class="bi bi-plus-circle me-1"></i>Thêm Đề Thi Mới
+            </button>
+          </div>
+          <div class="row g-3" id="system-exams-list">
+            <!-- JS inserts exam cards here -->
+          </div>
+        </div>
+
+        <!-- BÌNH LUẬN MÔN HỌC -->
+        <div class="card glass-card border-secondary p-4">
+          <h4 class="h5 fw-bold text-light mb-3"><i class="bi bi-chat-left-text-fill me-2 text-info"></i>Bình luận & Thảo luận</h4>
+          <p class="text-secondary-light small mb-4">Học viên và quản trị viên có thể thảo luận và đóng góp ý kiến về môn học này.</p>
+          
+          <!-- Comment Form -->
+          <form id="subject-comment-form" onsubmit="postSubjectComment(event)" class="mb-4">
+            <div class="d-flex gap-3 align-items-start">
+              <div class="avatar-circle bg-info bg-opacity-25 text-info fw-bold d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; font-size: 14px;" id="comment-user-avatar">
+                U
+              </div>
+              <div class="flex-grow-1">
+                <textarea class="form-control bg-dark-glass text-light border-secondary mb-2" id="comment-text" rows="2" placeholder="Viết bình luận của bạn tại đây..." required></textarea>
+                <div class="text-end">
+                  <button type="submit" class="btn btn-info text-dark btn-sm rounded-pill px-4 fw-bold">
+                    <i class="bi-send-fill me-1"></i>Gửi bình luận
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <!-- Comments Feed -->
+          <div id="subject-comments-feed" class="d-flex flex-column gap-3" style="max-height: 400px; overflow-y: auto;">
+            <!-- Rendered dynamically by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 4.4 System Exam / Quiz Test Runner -->
+      <div id="system-exam-runner" class="d-none">
+        <!-- JS renders test screen: questions, timer, practice vs test option -->
+      </div>
+    </section>
+
+    <!-- ==============================================
+         5. RESULTS VIEW (KẾT QUẢ THI)
+         ============================================== -->
+    <section id="results-view" class="view-section d-none">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+          <h2 class="fw-bold text-gradient-cyan m-0">Xem Kết Quả Thi</h2>
+          <p class="text-secondary m-0" id="results-subtitle">Thống kê điểm số của học sinh theo đơn vị lớp</p>
+        </div>
+        <button class="btn btn-outline-light rounded-pill px-3" onclick="navigateTo('dashboard')">
+          <i class="bi bi-arrow-left me-1"></i>Trở lại Dashboard
+        </button>
+      </div>
+
+      <div class="row g-4">
+        <!-- Left column: 3-step Filter (Khoa -> Môn -> Đơn vị) -->
+        <div class="col-12 col-md-4">
+          <div class="card glass-card border-secondary p-3 h-100">
+            <h3 class="h6 fw-bold text-light mb-3"><i class="bi bi-funnel-fill text-info me-2"></i>Bộ lọc kết quả</h3>
+            
+            <!-- Chọn Khoa -->
+            <div class="mb-3">
+              <label class="form-label text-secondary small fw-bold">Khoa</label>
+              <select class="form-select bg-dark-glass text-light border-secondary rounded-pill" id="results-filter-dept" onchange="onFilterDeptChange()">
+                <option value="all">Tất cả các Khoa/Phòng</option>
+                <option value="K1">Khoa Chiến thuật (K1)</option>
+                <option value="K2">Khoa Khoa học Xã hội và Nhân văn (K2)</option>
+                <option value="K3">Khoa Công trình (K3)</option>
+                <option value="K4">Khoa Cầu đường Vượt sông (K4)</option>
+                <option value="K5">Khoa Xe máy (K5)</option>
+                <option value="K6">Khoa Cơ sở (K6)</option>
+                <option value="K7">Khoa Khoa học Cơ bản (K7)</option>
+                <option value="K8">Khoa Quân sự chung (K8)</option>
+                <option value="P1">Phòng Tham Mưu Hành Chính (P1)</option>
+                <option value="P2">Phòng Chính Trị (P2)</option>
+                <option value="P3">Phòng Hậu Cần-Kỹ Thuật (P3)</option>
+                <option value="P4">Phòng Đào Tạo (P4)</option>
+                <option value="BGH">Ban Giám Hiệu (BGH)</option>
+              </select>
+            </div>
+
+            <!-- Chọn Môn học -->
+            <div class="mb-3">
+              <label class="form-label text-secondary small fw-bold">Môn học</label>
+              <select class="form-select bg-dark-glass text-light border-secondary rounded-pill" id="results-filter-subject" onchange="onFilterSubjectChange()">
+                <option value="all">Tất cả Môn học</option>
+              </select>
+            </div>
+
+            <!-- Chọn Đơn vị -->
+            <div class="mb-2">
+              <label class="form-label text-secondary small fw-bold">Đơn vị</label>
+              <select class="form-select bg-dark-glass text-light border-secondary rounded-pill" id="results-filter-unit" onchange="onFilterUnitChange()">
+                <option value="all">Tất cả Đơn vị</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column: Grade table -->
+        <div class="col-12 col-md-8">
+          <div class="card glass-card border-secondary p-4 h-100">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-3">
+              <div>
+                <h3 class="h5 fw-bold text-light m-0">Bảng điểm Đơn vị: <span id="current-result-unit-title" class="text-info">Tất cả</span></h3>
+                <p class="text-secondary small m-0">Sắp xếp tự động theo tên học viên (A-Z)</p>
+              </div>
+              <div class="d-flex gap-2 align-items-center" id="results-actions">
+                <button class="btn btn-danger btn-sm rounded-pill px-3 d-none" id="clear-all-results-btn" onclick="clearAllResults()">
+                  <i class="bi bi-trash3-fill me-1"></i>Xóa Toàn Bộ Kết Quả
+                </button>
+              </div>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="table table-bordered border-secondary table-dark table-striped table-hover align-middle" id="results-table">
+                <thead>
+                  <tr class="text-secondary small">
+                    <th class="text-center" style="width: 50px;">TT</th>
+                    <th>Họ và Tên</th>
+                    <th>Đơn vị</th>
+                    <th>Môn học</th>
+                    <th>Đề thi</th>
+                    <th class="text-center">Điểm</th>
+                    <th class="text-center">Thời gian</th>
+                    <th class="text-center d-none" id="th-delete-col">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="results-table-body">
+                  <!-- JS renders rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         6. ADMIN VIEW (QUẢN LÝ TÀI KHOẢN)
+         ============================================== -->
+    <section id="admin-view" class="view-section d-none">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+          <h2 class="fw-bold text-gradient-purple m-0">Cấp Phát Tài Khoản</h2>
+          <p class="text-secondary m-0">Công cụ quản lý tài khoản cho Cán bộ</p>
+        </div>
+        <button class="btn btn-outline-light rounded-pill px-3" onclick="navigateTo('dashboard')">
+          <i class="bi bi-arrow-left me-1"></i>Trở lại Dashboard
+        </button>
+      </div>
+
+      <div class="row g-4">
+        <!-- Left: Create User Account Form -->
+        <div class="col-12 col-lg-5">
+          <div class="card glass-card border-secondary p-4">
+            <h3 class="h5 fw-bold text-light mb-4">Tạo Tài Khoản Mới</h3>
+            <form id="create-user-form" onsubmit="handleCreateUser(event)">
+              <div class="mb-3">
+                <label for="new-username" class="form-label text-secondary small fw-bold">Tên đăng nhập</label>
+                <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="new-username" required placeholder="Nhập tên đăng nhập (ví dụ: gv_k3)">
+              </div>
+              <div class="mb-3">
+                <label for="new-password" class="form-label text-secondary small fw-bold">Mật khẩu</label>
+                <input type="password" class="form-control bg-dark-glass text-light border-secondary" id="new-password" required placeholder="Mật khẩu tối thiểu 6 ký tự">
+              </div>
+              <div class="mb-3">
+                <label for="new-name" class="form-label text-secondary small fw-bold">Họ và Tên / Tên hiển thị</label>
+                <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="new-name" required placeholder="Nhập tên giáo viên hoặc học viên">
+              </div>
+              <div class="mb-3">
+                <label for="new-role" class="form-label text-secondary small fw-bold">Vai trò</label>
+                <select class="form-select bg-dark-glass text-light border-secondary" id="new-role" onchange="toggleNewUserDeptField()" required>
+                  <option value="student">Học viên</option>
+                  <option value="super_admin">Cán bộ</option>
+                </select>
+              </div>
+              <div class="mb-4 d-none" id="new-user-dept-container">
+                <label for="new-department" class="form-label text-info small fw-bold">Khoa quản lý</label>
+                <select class="form-select bg-dark-glass text-info border-secondary" id="new-department">
+                  <option value="K1">Khoa Chiến thuật (K1)</option>
+                  <option value="K2">Khoa Khoa học Xã hội và Nhân văn (K2)</option>
+                  <option value="K3">Khoa Công trình (K3)</option>
+                  <option value="K4">Khoa Cầu đường Vượt sông (K4)</option>
+                  <option value="K5">Khoa Xe máy (K5)</option>
+                  <option value="K6">Khoa Cơ sở (K6)</option>
+                  <option value="K7">Khoa Khoa học Cơ bản (K7)</option>
+                  <option value="K8">Khoa Quân sự chung (K8)</option>
+                </select>
+              </div>
+              <div id="new-user-military-container">
+                <div class="mb-3">
+                  <label for="new-trung-doi" class="form-label text-secondary small fw-bold">Trung đội</label>
+                  <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="new-trung-doi" placeholder="Ví dụ: Trung đội 1">
+                </div>
+                <div class="mb-3">
+                  <label for="new-dai-doi" class="form-label text-secondary small fw-bold">Đại đội</label>
+                  <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="new-dai-doi" placeholder="Ví dụ: Đại đội 1">
+                </div>
+                <div class="mb-3">
+                  <label for="new-tieu-doan" class="form-label text-secondary small fw-bold">Tiểu đoàn</label>
+                  <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="new-tieu-doan" placeholder="Ví dụ: Tiểu đoàn 1">
+                </div>
+              </div>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary rounded-pill glow-button py-2">
+                  <i class="bi bi-person-plus-fill me-2"></i>Cấp phát tài khoản
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Card Nhập tài khoản từ Excel -->
+          <div class="card glass-card border-secondary p-4 mt-4 text-start">
+            <h3 class="h5 fw-bold text-light mb-3"><i class="bi bi-file-earmark-excel-fill text-success me-2"></i>Nhập từ Excel</h3>
+            <p class="text-secondary small mb-3">Tải tệp Excel hoặc CSV chứa danh sách tài khoản theo định dạng chuẩn để cấp phát hàng loạt nhanh chóng.</p>
+            
+            <div class="mb-3">
+              <label for="excel-file-input" class="form-label text-secondary small fw-bold">Chọn tệp Excel (.xlsx, .xls) hoặc .csv</label>
+              <input type="file" class="form-control bg-dark-glass text-light border-secondary" id="excel-file-input" accept=".xlsx, .xls, .csv">
+            </div>
+            
+            <button class="btn btn-success rounded-pill px-4 fw-bold w-100 mb-2" onclick="importAccountsFromExcel()">
+              <i class="bi bi-cloud-upload me-1"></i>Nhập tài khoản
+            </button>
+            
+            <div class="text-end">
+              <a href="#" class="small text-info text-decoration-none" onclick="downloadExcelTemplate(event)">
+                <i class="bi bi-download me-1"></i>Tải tệp mẫu Excel
+              </a>
+            </div>
+          </div>
+
+          <!-- Cấu hình Gemini API Key Card -->
+          <div class="card glass-card border-secondary p-4 mt-4 text-start">
+            <h3 class="h5 fw-bold text-light mb-3"><i class="bi bi-robot text-info me-2"></i>Cấu hình AI (Google Gemini)</h3>
+            <p class="text-secondary small mb-4">Nhập API Key để kích hoạt chức năng chấm điểm tự động thông qua trí tuệ nhân tạo Gemini 1.5 Flash.</p>
+            <div class="mb-3">
+              <label for="gemini-api-key" class="form-label text-secondary small fw-bold">Gemini API Key</label>
+              <input type="password" class="form-control bg-dark-glass text-light border-secondary" id="gemini-api-key" placeholder="Nhập ghp_... hoặc AI Key của bạn">
+              <div class="form-text text-secondary small mt-2">Được lưu trực tiếp ở trình duyệt của bạn. Nếu để trống, hệ thống sẽ sử dụng thuật toán **Giả lập AI chấm điểm** cục bộ dựa trên Barem.</div>
+            </div>
+            <button class="btn btn-info text-dark rounded-pill px-4 fw-bold w-100" onclick="saveGeminiKey()">
+              <i class="bi bi-check-circle me-1"></i>Lưu Cấu hình API Key
+            </button>
+          </div>
+
+          <!-- Card Thông báo Đăng nhập -->
+          <div class="card glass-card border-secondary p-4 mt-4 text-start">
+            <h3 class="h5 fw-bold text-light mb-3"><i class="bi bi-megaphone-fill text-warning me-2"></i>Thông báo Đăng nhập</h3>
+            <p class="text-secondary small mb-3">Quản lý danh sách các thông báo hiển thị tại màn hình đăng nhập hệ thống.</p>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label text-secondary small fw-bold m-0">Danh sách thông báo</label>
+                <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3 py-1 fw-bold" style="font-size: 0.75rem;" onclick="addAnnouncementRow()">
+                  <i class="bi bi-plus-circle-fill me-1"></i>Thêm dòng
+                </button>
+              </div>
+              <div id="announcement-table-container" class="table-responsive border border-secondary rounded-3 overflow-y-auto" style="max-height: 250px;">
+                <!-- JS renders table of announcement inputs here -->
+              </div>
+            </div>
+            <button class="btn btn-warning text-dark rounded-pill px-4 fw-bold w-100 mt-2" onclick="saveAllAnnouncements()">
+              <i class="bi bi-check-circle me-1"></i>Cập nhật thông báo
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right: Users List -->
+        <div class="col-12 col-lg-7">
+          <div class="card glass-card border-secondary p-4">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-4">
+              <h3 class="h5 fw-bold text-light m-0">Danh Sách Tài Khoản Hệ Thống</h3>
+              <div class="d-flex align-items-center gap-2">
+                <label for="filter-user-role" class="text-secondary small fw-bold m-0" style="white-space: nowrap;">Lọc vai trò:</label>
+                <select id="filter-user-role" class="form-select form-select-sm bg-dark-glass text-light border-secondary" style="width: auto;" onchange="loadUsersTable()">
+                  <option value="all">Tất cả</option>
+                  <option value="super_admin">Cán bộ</option>
+                  <option value="student">Học viên</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-dark table-bordered table-striped table-hover align-middle border-secondary" id="users-table">
+                <thead>
+                  <tr class="text-secondary small">
+                    <th>Tên đăng nhập</th>
+                    <th>Họ và Tên</th>
+                    <th>Vai trò</th>
+                    <th>Đơn vị trực thuộc</th>
+                    <th class="text-center">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="users-table-body">
+                  <!-- JS renders users rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==============================================
+       7. GLOBAL MODALS
+       ============================================== -->
+
+  <!-- Modal 1: Nhập thông tin để nộp bài kiểm tra (Student Name / Unit) -->
+  <div class="modal fade" id="submitExamModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-secondary text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold text-gradient-cyan"><i class="bi bi-clipboard-check me-2"></i>Nộp bài & Lưu kết quả</h5>
+        </div>
+        <form id="submit-exam-form" onsubmit="handleExamRecordSubmit(event)">
+          <div class="modal-body">
+            <p class="text-secondary small mb-4">Bài làm của bạn sẽ được ghi nhận lên bảng điểm hệ thống. Vui lòng cung cấp đúng thông tin để phục vụ công tác thống kê.</p>
+            
+            <div class="mb-3">
+              <label for="record-student-name" class="form-label text-secondary-light small fw-bold">Họ và Tên</label>
+              <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="record-student-name" required placeholder="Nhập đầy đủ Họ và Tên">
+            </div>
+            
+            <div class="mb-3">
+              <label for="record-unit" class="form-label text-secondary-light small fw-bold">Đơn vị (Lớp / Chi đoàn / Đội nhóm)</label>
+              <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="record-unit" required placeholder="Ví dụ: Lớp K61-PM1, Tổ 1, v.v.">
+            </div>
+          </div>
+          <div class="modal-footer border-secondary">
+            <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-primary rounded-pill glow-button px-4">Lưu kết quả & Xem điểm</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Add/Edit Subject (Giáo viên / Admin) -->
+  <div class="modal fade" id="subjectModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-secondary text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold" id="subject-modal-title">Thêm Môn Học Mới</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="subject-form" onsubmit="handleSaveSubject(event)">
+          <div class="modal-body">
+            <input type="hidden" id="edit-subject-id">
+            <div class="mb-3">
+              <label for="subject-input-name" class="form-label text-secondary small fw-bold">Tên môn học</label>
+              <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="subject-input-name" required placeholder="Nhập tên môn học chuyên ngành">
+            </div>
+            <div class="mb-3">
+              <label for="subject-input-password" class="form-label text-secondary small fw-bold">Mật khẩu môn học (Cho học viên)</label>
+              <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="subject-input-password" placeholder="Bỏ trống nếu không yêu cầu mật khẩu">
+              <div class="form-text text-secondary-light small mt-1">Học viên phải nhập đúng mật khẩu này mới được truy cập môn học.</div>
+            </div>
+          </div>
+          <div class="modal-footer border-secondary">
+            <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Đóng</button>
+            <button type="submit" class="btn btn-success rounded-pill px-4">Lưu môn học</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Add/Edit Exam (Giáo viên / Admin) -->
+  <div class="modal fade" id="examModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content glass-card border-secondary text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold" id="exam-modal-title">Thêm Bộ Đề Thi</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="exam-basic-form" class="mb-4">
+            <input type="hidden" id="edit-exam-id">
+            <div class="mb-3 col-md-6">
+              <label for="exam-input-year" class="form-label text-secondary-light small fw-bold">Tên bộ đề (Năm học / Kỳ thi)</label>
+              <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="exam-input-year" required placeholder="Ví dụ: Đề thi năm 2024">
+            </div>
+          </form>
+
+          <hr class="border-secondary">
+
+          <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold text-gradient-cyan m-0">Danh sách câu hỏi trong đề (<span id="exam-q-counter">0</span>)</h6>
+            <div class="d-flex flex-wrap gap-2">
+              <button type="button" class="btn btn-outline-info btn-sm rounded-pill fw-bold px-3" onclick="showWordImportInstruction()">
+                <i class="bi bi-file-earmark-word me-1"></i>Thêm đáp án và câu hỏi
+              </button>
+              <button type="button" class="btn btn-info btn-sm rounded-pill text-dark fw-bold px-3" onclick="addNewQuestionToExamForm()">
+                <i class="bi bi-plus-circle me-1"></i>Thêm Câu Hỏi
+              </button>
+            </div>
+          </div>
+
+          <div id="exam-questions-form-container" class="d-flex flex-column gap-3">
+            <!-- Dynamic questions forms will be created here -->
+          </div>
+        </div>
+        <div class="modal-footer border-secondary">
+          <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Hủy</button>
+          <button type="button" class="btn btn-success rounded-pill px-4" onclick="handleSaveExam()">Lưu bộ đề thi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-secondary text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold text-warning" id="changePasswordModalLabel"><i class="bi bi-key-fill me-2"></i>Đổi mật khẩu tài khoản</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="change-password-form" onsubmit="handleChangePassword(event)">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="cp-old-password" class="form-label text-secondary small fw-bold">Mật khẩu cũ</label>
+              <input type="password" class="form-control bg-dark-glass text-light border-secondary" id="cp-old-password" required placeholder="Nhập mật khẩu hiện tại">
+            </div>
+            <div class="mb-3">
+              <label for="cp-new-password" class="form-label text-secondary small fw-bold">Mật khẩu mới (Tối thiểu 6 ký tự)</label>
+              <input type="password" class="form-control bg-dark-glass text-light border-secondary" id="cp-new-password" required placeholder="Nhập mật khẩu mới">
+            </div>
+            <div class="mb-3">
+              <label for="cp-confirm-password" class="form-label text-secondary small fw-bold">Xác nhận mật khẩu mới</label>
+              <input type="password" class="form-control bg-dark-glass text-light border-secondary" id="cp-confirm-password" required placeholder="Xác nhận mật khẩu mới">
+            </div>
+          </div>
+          <div class="modal-footer border-secondary">
+            <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-warning rounded-pill px-4 fw-bold">Lưu thay đổi</button>
+          </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+  <!-- Edit Profile Name Modal -->
+  <div class="modal fade" id="editProfileNameModal" tabindex="-1" aria-labelledby="editProfileNameModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-secondary text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold text-info" id="editProfileNameModalLabel"><i class="bi bi-person-gear me-2"></i>Thay đổi họ và tên</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="edit-profile-name-form" onsubmit="handleSaveProfileName(event)">
+          <div class="modal-body text-start">
+            <div class="mb-3">
+              <label for="ep-full-name" class="form-label text-secondary small fw-bold">Họ và tên của bạn</label>
+              <input type="text" class="form-control bg-dark-glass text-light border-secondary" id="ep-full-name" required placeholder="Nhập họ và tên mới">
+            </div>
+          </div>
+          <div class="modal-footer border-secondary">
+            <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-info text-dark rounded-pill px-4 fw-bold">Lưu thay đổi</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Word Import Instruction Modal -->
+  <div class="modal fade" id="wordImportInstructionModal" tabindex="-1" aria-labelledby="wordImportInstructionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content glass-card border-secondary text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold text-info" id="wordImportInstructionModalLabel">
+            <i class="bi bi-info-circle-fill me-2"></i>Hướng dẫn định dạng tệp Word (.docx) để hệ thống nhận dạng
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+          <p class="text-secondary-light mb-3">Để hệ thống có thể tự động nhận dạng chính xác câu hỏi, phương án, đáp án và giải thích từ tệp Word (.docx), vui lòng soạn thảo nội dung theo hướng dẫn định dạng dưới đây:</p>
+
+          <div class="row g-3">
+            <!-- Trắc nghiệm -->
+            <div class="col-12 col-lg-4">
+              <div class="p-3 rounded bg-dark-glass border border-secondary h-100">
+                <h6 class="fw-bold text-warning mb-3"><i class="bi bi-card-checklist me-1"></i>1. Định dạng câu Trắc nghiệm</h6>
+                <p class="small text-secondary-light mb-2">Bắt đầu bằng <strong>Câu [số]:</strong> hoặc <strong>Question [số]:</strong></p>
+                
+                <div class="bg-black-glass p-2 rounded text-secondary-light font-monospace small mb-3 border-start border-warning border-3">
+                  Câu 1: Thủ đô của Việt Nam là gì?<br>
+                  A. Hà Nội<br>
+                  B. TP. Hồ Chí Minh<br>
+                  C. Đà Nẵng<br>
+                  D. Hải Phòng<br>
+                  Đáp án: A<br>
+                  Giải thích: Hà Nội là thủ đô của nước Việt Nam.
+                </div>
+                
+                <ul class="small text-secondary-light ps-3 mb-0">
+                  <li>Các phương án chọn bắt đầu bằng <strong>A.</strong>, <strong>B.</strong>, <strong>C.</strong>, <strong>D.</strong> (hoặc dạng A), B), C), D)).</li>
+                  <li>Cách chỉ định đáp án đúng (chọn 1 trong 2 cách):
+                    <ul class="ps-3">
+                      <li>Thêm dòng <code>Đáp án: A</code> (hoặc <code>Đáp án đúng: A</code>, <code>Chọn: A</code>, <code>ĐA: A</code>) ngay dưới các phương án.</li>
+                      <li>Hoặc <strong>in đậm</strong> hoặc <u>gạch chân</u> trực tiếp phương án đúng (Ví dụ: <strong>A. Hà Nội</strong> hoặc <u>A. Hà Nội</u>).</li>
+                    </ul>
+                  </li>
+                  <li>(Không bắt buộc) Thêm dòng <code>Giải thích: [Nội dung]</code> ở cuối câu hỏi để lưu giải thích đáp án.</li>
+                </ul>
+              </div>
+            </div>
+            
+            <!-- Tự luận -->
+            <div class="col-12 col-lg-4">
+              <div class="p-3 rounded bg-dark-glass border border-secondary h-100">
+                <h6 class="fw-bold text-gradient-cyan mb-3"><i class="bi bi-file-earmark-text-fill me-1"></i>2. Định dạng câu Tự luận</h6>
+                <p class="small text-secondary-light mb-2">Bắt đầu bằng <strong>Câu [số]:</strong> và cần có các dòng định danh tự luận như sau:</p>
+                
+                <div class="bg-black-glass p-2 rounded text-secondary-light font-monospace small mb-3 border-start border-info border-3">
+                  Câu 2: Trình bày ý nghĩa của Cách mạng Tháng Tám năm 1945?<br>
+                  Đáp án mẫu: Cách mạng Tháng Tám đã mở ra một kỷ nguyên mới...<br>
+                  Barem điểm:<br>
+                  1. Nêu bối cảnh (1.0đ)<br>
+                  2. Diễn biến chính (1.5đ)<br>
+                  3. Ý nghĩa lịch sử (1.5đ)
+                </div>
+                
+                <ul class="small text-secondary-light ps-3 mb-0">
+                  <li>Để hệ thống nhận dạng đây là câu hỏi tự luận, bắt buộc phải có dòng bắt đầu bằng <code>Đáp án mẫu:</code> hoặc <code>Đáp án:</code> hoặc <code>Sample answer:</code>.</li>
+                  <li>(Không bắt buộc) Thêm dòng <code>Barem:</code> hoặc <code>Barem điểm:</code> hoặc <code>Criteria:</code> để phân chia thang điểm chi tiết cho bài thi tự luận.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Vấn đáp AI -->
+            <div class="col-12 col-lg-4">
+              <div class="p-3 rounded bg-dark-glass border border-secondary h-100">
+                <h6 class="fw-bold text-danger mb-3"><i class="bi bi-mic-fill me-1"></i>3. Định dạng câu Vấn đáp AI</h6>
+                <p class="small text-secondary-light mb-2">Bắt đầu bằng <strong>Câu [số]:</strong> và cần định nghĩa các từ khóa và barem chấm điểm bằng giọng nói:</p>
+                
+                <div class="bg-black-glass p-2 rounded text-secondary-light font-monospace small mb-3 border-start border-danger border-3">
+                  Câu 3: Giao thức HTTP và HTTPS khác nhau thế nào?<br>
+                  Đáp án mẫu: HTTPS là phiên bản bảo mật của HTTP...<br>
+                  Barem điểm:<br>
+                  1. Cổng kết nối (80 vs 443) (3đ)<br>
+                  2. Cơ chế mã hóa SSL/TLS (4đ)<br>
+                  3. Chứng chỉ số CA (3đ)<br>
+                  Từ khóa: cổng 80, cổng 443, ssl, tls, mã hóa, chứng chỉ
+                </div>
+                
+                <ul class="small text-secondary-light ps-3 mb-0">
+                  <li>Để hệ thống nhận dạng là câu hỏi vấn đáp, bắt buộc phải có dòng bắt đầu bằng <code>Từ khóa:</code> hoặc <code>Keywords:</code> hoặc <code>Từ khóa cốt lõi:</code>.</li>
+                  <li>Các từ khóa cốt lõi phân cách bằng dấu phẩy. Hệ thống AI và bộ chấm offline sẽ đối chiếu bài nói của học viên để so khớp thang điểm và hỗ trợ chấm điểm chính xác.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3 alert alert-info bg-info-glass border-info text-light small mb-0">
+            <i class="bi bi-exclamation-triangle-fill me-2 text-info"></i>
+            <strong>Lưu ý quan trọng:</strong> Hệ thống chỉ chấp nhận định dạng tệp <strong>.docx</strong> (Microsoft Word). Vui lòng lưu ý cấu trúc viết hoa hoặc dấu câu phù hợp để công cụ trích xuất hoạt động chính xác nhất.
+          </div>
+        </div>
+        <div class="modal-footer border-secondary">
+          <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Hủy</button>
+          <button type="button" class="btn btn-info rounded-pill text-dark fw-bold px-4" onclick="triggerWordImportFromInstruction()">
+            <i class="bi bi-file-earmark-arrow-up me-1"></i>Chọn file Word (.docx)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Push to System Modal -->
+  <div class="modal fade" id="pushToSystemModal" tabindex="-1" aria-labelledby="pushToSystemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-secondary text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold text-info" id="pushToSystemModalLabel">
+            <i class="bi bi-cloud-arrow-up-fill me-2"></i>Đẩy câu hỏi lên Hệ thống
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="small text-secondary-light mb-3">Chọn Khoa, Môn học và Đề thi trên hệ thống mà bạn muốn đóng góp câu hỏi này:</p>
+          <input type="hidden" id="push-q-index">
+          <div class="mb-3">
+            <label class="form-label text-secondary-light small fw-bold">Chọn Khoa</label>
+            <select class="form-select bg-dark-glass text-light border-secondary" id="push-select-dept" onchange="onPushDeptChange()" required>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-secondary-light small fw-bold">Chọn Môn học</label>
+            <select class="form-select bg-dark-glass text-light border-secondary" id="push-select-subject" onchange="onPushSubjectChange()" required>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-secondary-light small fw-bold">Chọn Đề thi / Bộ đề</label>
+            <select class="form-select bg-dark-glass text-light border-secondary" id="push-select-exam" required>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer border-secondary">
+          <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Hủy</button>
+          <button type="button" class="btn btn-info rounded-pill text-dark fw-bold px-4" onclick="confirmPushToSystem()">
+            <i class="bi bi-check-circle me-1"></i>Xác nhận Đẩy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Hướng dẫn nhập câu hỏi cá nhân (Word/Excel) -->
+  <div class="modal fade" id="personalImportInstructionModal" tabindex="-1" aria-labelledby="personalImportInstructionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content glass-card border-secondary text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold text-gradient-cyan" id="personalImportInstructionModalLabel">
+            <i class="bi bi-file-earmark-arrow-up me-2"></i>Hướng dẫn nhập câu hỏi cá nhân
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Navigation tabs within the modal -->
+          <ul class="nav nav-tabs border-secondary mb-3" id="personal-import-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active text-light border-secondary" id="import-word-tab" data-bs-toggle="tab" data-bs-target="#import-word-desc" type="button" role="tab">
+                <i class="bi bi-file-earmark-word me-1 text-info"></i>Định dạng Word (.docx)
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link text-light border-secondary" id="import-excel-tab" data-bs-toggle="tab" data-bs-target="#import-excel-desc" type="button" role="tab">
+                <i class="bi bi-file-earmark-excel me-1 text-success"></i>Định dạng Excel (.xlsx / .xls)
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="personal-import-tabs-content">
+            <!-- Word format description -->
+            <div class="tab-pane fade show active" id="import-word-desc" role="tabpanel">
+              <p class="small text-secondary-light mb-3">Bạn có thể chuẩn bị file Word (.docx) chứa danh sách câu hỏi theo cú pháp chuẩn sau:</p>
+              
+              <div class="row g-3">
+                <!-- Trắc nghiệm -->
+                <div class="col-12 col-lg-4">
+                  <div class="p-3 rounded bg-dark-glass border border-secondary h-100">
+                    <h6 class="fw-bold text-info mb-3"><i class="bi bi-list-check me-1"></i>1. Định dạng câu Trắc nghiệm</h6>
+                    <div class="bg-black-glass p-2 rounded text-secondary-light font-monospace small mb-3 border-start border-info border-3">
+                      Câu 1: Thủ đô của Việt Nam là gì?<br>
+                      A. Hà Nội<br>
+                      B. TP. Hồ Chí Minh<br>
+                      C. Đà Nẵng<br>
+                      D. Hải Phòng<br>
+                      Đáp án đúng: A
+                    </div>
+                    <ul class="small text-secondary-light ps-3 mb-0">
+                      <li>Bắt đầu bằng <code>Câu [số]:</code></li>
+                      <li>Các dòng phương án bắt đầu bằng <code>A.</code>, <code>B.</code>, <code>C.</code>, <code>D.</code></li>
+                      <li>Khai báo đáp án đúng bằng cách <strong>in đậm</strong> hoặc <strong>gạch chân</strong> phương án đúng, hoặc viết thêm dòng <code>Đáp án đúng: A</code> bên dưới.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Tự luận -->
+                <div class="col-12 col-lg-4">
+                  <div class="p-3 rounded bg-dark-glass border border-secondary h-100">
+                    <h6 class="fw-bold text-purple mb-3"><i class="bi bi-pencil-square me-1"></i>2. Định dạng câu Tự luận</h6>
+                    <div class="bg-black-glass p-2 rounded text-secondary-light font-monospace small mb-3 border-start border-purple border-3">
+                      Câu 2: Trình bày tính đa hình trong OOP?<br>
+                      Đáp án mẫu: Tính đa hình cho phép các đối tượng con hành xử khác nhau...<br>
+                      Barem điểm:<br>
+                      1. Định nghĩa đa hình (5đ)<br>
+                      2. Ví dụ minh họa (5đ)
+                    </div>
+                    <ul class="small text-secondary-light ps-3 mb-0">
+                      <li>Bắt đầu bằng <code>Câu [số]:</code></li>
+                      <li>Bắt buộc phải có dòng bắt đầu bằng <code>Đáp án mẫu:</code> hoặc <code>Đáp án:</code>.</li>
+                      <li>Có thể bổ sung dòng <code>Barem điểm:</code> hoặc <code>Barem:</code> để AI chấm điểm chính xác theo barem.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Vấn đáp -->
+                <div class="col-12 col-lg-4">
+                  <div class="p-3 rounded bg-dark-glass border border-secondary h-100">
+                    <h6 class="fw-bold text-danger mb-3"><i class="bi bi-mic-fill me-1"></i>3. Định dạng câu Vấn đáp AI</h6>
+                    <div class="bg-black-glass p-2 rounded text-secondary-light font-monospace small mb-3 border-start border-danger border-3">
+                      Câu 3: Giao thức HTTPS là gì?<br>
+                      Đáp án mẫu: Là giao thức HTTP có bảo mật SSL/TLS...<br>
+                      Từ khóa: cổng 443, ssl, tls, bảo mật, mã hóa
+                    </div>
+                    <ul class="small text-secondary-light ps-3 mb-0">
+                      <li>Bắt đầu bằng <code>Câu [số]:</code></li>
+                      <li>Phải có dòng bắt đầu bằng <code>Từ khóa:</code> hoặc <code>Keywords:</code> để kích hoạt kiểm tra chấm điểm vấn đáp.</li>
+                      <li>Các từ khóa ngăn cách bằng dấu phẩy.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Excel format description -->
+            <div class="tab-pane fade" id="import-excel-desc" role="tabpanel">
+              <p class="small text-secondary-light mb-3">Chuẩn bị file Excel (.xlsx hoặc .xls) có dòng tiêu đề đầu tiên và các giá trị tương ứng như bảng mô phỏng trực quan sau:</p>
+              
+              <div class="excel-grid-simulator mb-3">
+                <div class="table-responsive" style="border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; background: rgba(0,0,0,0.4); max-height: 400px; overflow-y: auto;">
+                  <table class="table table-bordered mb-0 align-middle text-start text-light small" style="min-width: 1200px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11.5px;">
+                    <thead>
+                      <tr class="text-center text-secondary-light" style="font-size: 11px; font-weight: bold; background: rgba(255,255,255,0.08) !important;">
+                        <th style="width: 40px; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.25);"></th>
+                        <th style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.25);">A</th>
+                        <th style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.25);">B</th>
+                        <th style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.25);">C</th>
+                        <th style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.25);">D</th>
+                        <th style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.25);">E</th>
+                        <th style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.25);">F</th>
+                        <th style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.25);">G</th>
+                        <th style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.25);">H</th>
+                        <th style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.25);">I</th>
+                        <th style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.25);">J</th>
+                        <th style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.25);">K</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Row 1: Header Titles -->
+                      <tr style="font-weight: bold; background: rgba(255,255,255,0.05) !important;">
+                        <td class="text-center text-secondary small" style="background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.15);">1</td>
+                        <td class="text-info" style="border-color: rgba(255,255,255,0.15);">Câu hỏi</td>
+                        <td class="text-info" style="border-color: rgba(255,255,255,0.15);">Loại</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Lựa chọn A</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Lựa chọn B</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Lựa chọn C</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Lựa chọn D</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Đáp án đúng</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Đáp án mẫu</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Barem điểm</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Từ khóa</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Giải thích</td>
+                      </tr>
+                      <!-- Row 2: Choice -->
+                      <tr>
+                        <td class="text-center text-secondary small" style="background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.15);">2</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Thủ đô của Việt Nam là gì?</td>
+                        <td class="text-warning fw-bold" style="border-color: rgba(255,255,255,0.15);">choice</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Hà Nội</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">TP. Hồ Chí Minh</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Đà Nẵng</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Hải Phòng</td>
+                        <td class="text-success text-center fw-bold" style="border-color: rgba(255,255,255,0.15);">A</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Hà Nội là thủ đô của VN.</td>
+                      </tr>
+                      <!-- Row 3: Essay -->
+                      <tr>
+                        <td class="text-center text-secondary small" style="background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.15);">3</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Giải thích tính đa hình trong OOP?</td>
+                        <td class="text-warning fw-bold" style="border-color: rgba(255,255,255,0.15);">essay</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td class="text-secondary text-center small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Đa hình cho phép các đối tượng con hành xử khác nhau...</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">1. Khái niệm (5đ)<br>2. Ví dụ (5đ)</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                      </tr>
+                      <!-- Row 4: Interview -->
+                      <tr>
+                        <td class="text-center text-secondary small" style="background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.15);">4</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">Giao thức HTTPS hoạt động thế nào?</td>
+                        <td class="text-warning fw-bold" style="border-color: rgba(255,255,255,0.15);">interview</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td class="text-secondary text-center small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">HTTPS sử dụng SSL/TLS để mã hóa dữ liệu...</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">1. Định nghĩa (5đ)<br>2. Cách mã hóa (5đ)</td>
+                        <td style="border-color: rgba(255,255,255,0.15);">mã hóa, ssl, tls, bảo mật</td>
+                        <td class="text-secondary small italic" style="border-color: rgba(255,255,255,0.15); font-style: italic;">[Bỏ trống]</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="alert alert-secondary bg-dark-glass border-secondary text-secondary-light small mb-0 py-2">
+                <i class="bi bi-info-circle me-1 text-info"></i> <strong>Lưu ý:</strong> Dòng đầu tiên (dòng 1) bắt buộc phải ghi đúng chính xác tên các cột như trên. Các cột không dùng của câu hỏi tự luận/vấn đáp (như Lựa chọn A-D) hoặc ngược lại hãy để trống.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-secondary justify-content-between">
+          <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Hủy</button>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-info text-dark rounded-pill px-4 fw-bold" id="btn-import-word-trigger" onclick="triggerPersonalWordFileSelect()">
+              <i class="bi bi-file-earmark-word me-1"></i>Chọn file Word (.docx)
+            </button>
+            <button type="button" class="btn btn-success text-light rounded-pill px-4 fw-bold d-none" id="btn-import-excel-trigger" onclick="triggerPersonalExcelFileSelect()">
+              <i class="bi bi-file-earmark-excel me-1"></i>Chọn file Excel (.xlsx)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Hướng dẫn định dạng Excel tài khoản -->
+  <div class="modal fade" id="accountsExcelInstructionModal" tabindex="-1" aria-labelledby="accountsExcelInstructionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content glass-card border-secondary text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold text-gradient-cyan" id="accountsExcelInstructionModalLabel">
+            <i class="bi bi-file-earmark-excel me-2 text-success"></i>Hướng dẫn định dạng nhập tài khoản từ Excel
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-start">
+          <p class="small text-secondary mb-3">Tệp Excel nhập tài khoản cần chứa các cột thông tin chuẩn. Dưới đây là bảng giả lập định dạng tệp Excel chuẩn:</p>
+          
+          <!-- Simulated Excel Spreadsheet -->
+          <div class="table-responsive rounded border border-secondary mb-4" style="background: #111827;">
+            <table class="table table-bordered border-secondary text-light small m-0 text-center" style="min-width: 800px;">
+              <thead>
+                <tr class="bg-dark-glass text-secondary">
+                  <th style="width: 40px; background: rgba(0,0,0,0.4);"></th>
+                  <th>A</th>
+                  <th>B</th>
+                  <th>C</th>
+                  <th>D</th>
+                  <th>E</th>
+                  <th>F</th>
+                  <th>G</th>
+                </tr>
+                <tr class="table-dark">
+                  <th style="background: rgba(0,0,0,0.4);">1</th>
+                  <th class="text-info fw-bold">Tên đăng nhập</th>
+                  <th class="text-info fw-bold">Mật khẩu</th>
+                  <th class="text-info fw-bold">Họ và Tên</th>
+                  <th class="text-info fw-bold">Vai trò</th>
+                  <th class="text-info fw-bold">Trung đội</th>
+                  <th class="text-info fw-bold">Đại đội</th>
+                  <th class="text-info fw-bold">Tiểu đoàn</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-secondary small fw-bold" style="background: rgba(0,0,0,0.4);">2</td>
+                  <td>nguyenvanan</td>
+                  <td>123456</td>
+                  <td>Nguyễn Văn An</td>
+                  <td>student</td>
+                  <td>Trung đội 1</td>
+                  <td>Đại đội 1</td>
+                  <td>Tiểu đoàn 1</td>
+                </tr>
+                <tr>
+                  <td class="text-secondary small fw-bold" style="background: rgba(0,0,0,0.4);">3</td>
+                  <td>tranminhquan</td>
+                  <td>123456</td>
+                  <td>Trần Minh Quân</td>
+                  <td>student</td>
+                  <td>Trung đội 2</td>
+                  <td>Đại đội 1</td>
+                  <td>Tiểu đoàn 1</td>
+                </tr>
+                <tr>
+                  <td class="text-secondary small fw-bold" style="background: rgba(0,0,0,0.4);">4</td>
+                  <td>hoangvanthai</td>
+                  <td>hoangvanthai</td>
+                  <td>Hoàng Văn Thái</td>
+                  <td>super_admin</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td class="text-secondary small fw-bold" style="background: rgba(0,0,0,0.4);">5</td>
+                  <td>developer</td>
+                  <td>dev123</td>
+                  <td>Nhà phát triển</td>
+                  <td>development</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h6 class="fw-bold text-info mb-2"><i class="bi bi-info-circle me-1"></i>Quy tắc nhập liệu:</h6>
+          <ul class="small text-secondary-light ps-3 mb-3">
+            <li><strong>Dòng 1 (Tiêu đề cột):</strong> Bắt buộc phải ghi đúng chính xác tên các cột như trên (không dấu hoặc có dấu đúng định dạng): <code>Tên đăng nhập</code>, <code>Mật khẩu</code>, <code>Họ và Tên</code>, <code>Vai trò</code>, <code>Trung đội</code>, <code>Đại đội</code>, <code>Tiểu đoàn</code>.</li>
+            <li><strong>Cột Tên đăng nhập & Mật khẩu:</strong> Không được để trống. Độ dài mật khẩu tối thiểu là 6 ký tự.</li>
+            <li><strong>Cột Vai trò:</strong> Nhận một trong ba giá trị sau:
+              <ul>
+                <li><code>student</code>: Học viên (phải điền thêm thông tin đơn vị: Trung đội, Đại đội, Tiểu đoàn).</li>
+                <li><code>super_admin</code>: Cán bộ (thông tin đơn vị có thể bỏ trống).</li>
+                <li><code>development</code>: Developer (thông tin đơn vị có thể bỏ trống).</li>
+              </ul>
+            </li>
+            <li><strong>Cột Đơn vị:</strong> Với vai trò Học viên (student), vui lòng điền đầy đủ <code>Trung đội</code>, <code>Đại đội</code>, <code>Tiểu đoàn</code> để hệ thống tự phân nhóm.</li>
+          </ul>
+        </div>
+        <div class="modal-footer border-secondary justify-content-between">
+          <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-success text-light rounded-pill px-4 fw-bold" onclick="triggerActualTemplateDownload()">
+            <i class="bi bi-download me-1"></i>Tải file mẫu Excel thực tế (.xlsx)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BootStrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- SheetJS Library for Excel Import -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Mammoth JS for Word DOCX Import -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <!-- Mock Data Script -->
+  <script src="mock_data.js"></script>
+  <!-- App JS Logic -->
+  <script src="app.js?v=18"></script>
+  
+  <!-- Hidden File Inputs for Word Import -->
+  <input type="file" id="word-import-all" accept=".docx" style="display: none;" onchange="importWordAll(event)">
+  <input type="file" id="word-import-onlyq" accept=".docx" style="display: none;" onchange="importWordOnlyQ(event)">
+  <input type="file" id="personal-word-import" accept=".docx" style="display: none;" onchange="importPersonalWord(event)">
+  <input type="file" id="personal-excel-import" accept=".xlsx,.xls" style="display: none;" onchange="importPersonalExcel(event)">
+
+  <script>
+    // Register PWA Service Worker (Tạm thời tắt khi dev local để tránh cache)
+    /*
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('Service Worker registered successfully!', reg.scope))
+          .catch(err => console.log('Service Worker registration failed:', err));
+      });
+    }
+    */
+  </script>
+</body>
+</html>

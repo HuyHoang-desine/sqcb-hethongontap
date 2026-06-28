@@ -1,0 +1,10 @@
+# Git ignore file for SmartStudy PWA
+database.json
+*.docx
+*.spec
+dist/
+build/
+url.txt
+__pycache__/
+.DS_Store
+*.exe

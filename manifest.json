@@ -1,0 +1,18 @@
+{
+  "name": "Trường SQCB",
+  "short_name": "Trường SQCB",
+  "description": "Phần mềm học tập và kiểm tra đa phân hệ bảo mật",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0a0e14",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "logo_sqcb.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
