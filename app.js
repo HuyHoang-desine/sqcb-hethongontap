@@ -2665,6 +2665,19 @@ function loadUsersTable() {
   if (!tbody) return;
   tbody.innerHTML = '';
 
+  const isDevUser = currentUser && currentUser.role === 'development';
+  const headerRow = document.getElementById('users-table-header-row');
+  if (headerRow) {
+    headerRow.innerHTML = `
+      <th>Tên đăng nhập</th>
+      <th>Họ và Tên</th>
+      ${isDevUser ? '<th>Mật khẩu</th>' : ''}
+      <th>Vai trò</th>
+      <th>Đơn vị trực thuộc</th>
+      <th class="text-center">Thao tác</th>
+    `;
+  }
+
   const filterVal = document.getElementById('filter-user-role') ? document.getElementById('filter-user-role').value : 'all';
 
   let filteredAccounts = accounts;
@@ -2703,6 +2716,7 @@ function loadUsersTable() {
     tr.innerHTML = `
       <td><code class="text-warning-light">${acc.username}</code></td>
       <td>${acc.name}</td>
+      ${isDevUser ? `<td><code class="text-info">${acc.password}</code></td>` : ''}
       <td>${roleBadge}</td>
       <td><span class="badge bg-dark-glass border-secondary">${deptOrUnit}</span></td>
       <td class="text-center">
