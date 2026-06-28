@@ -952,6 +952,37 @@ function submitPersonalTest() {
     score = 'Tự luận (Cần đối chiếu)';
   }
 
+  // Lưu kết quả thi tự luyện cá nhân
+  const q0 = personalTestState.questions[0];
+  const deptName = q0 && q0.deptId ? (departments[q0.deptId]?.name || 'Khoa ' + q0.deptId) : 'Cá nhân';
+  const subObj = (q0 && q0.deptId && departments[q0.deptId]?.subjects) ? 
+                 departments[q0.deptId].subjects.find(s => s.id === q0.subjectId) : null;
+  const subjectName = subObj ? subObj.name : 'Môn học cá nhân';
+  const departmentId = q0 && q0.deptId ? q0.deptId : 'personal';
+
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+  
+  const newResult = {
+    id: 'res_' + Date.now(),
+    studentName: currentUser ? currentUser.name : 'Học viên ẩn danh',
+    unit: [currentUser?.trungDoi, currentUser?.daiDoi, currentUser?.tieuDoan].filter(Boolean).join(' - ') || 'Tự do',
+    trungDoi: currentUser?.trungDoi || '',
+    daiDoi: currentUser?.daiDoi || '',
+    tieuDoan: currentUser?.tieuDoan || '',
+    departmentId: departmentId,
+    departmentName: deptName,
+    subjectName: subjectName,
+    examYear: 'Tự luyện cá nhân',
+    score: typeof score === 'number' ? score : 10.0,
+    totalQuestions: personalTestState.questions.length,
+    correctCount: correctChoice,
+    date: dateStr
+  };
+
+  results.push(newResult);
+  saveResults();
+
   // Render Kết quả bài thi
   const runner = document.getElementById('personal-test-runner');
   
@@ -1222,7 +1253,9 @@ function loadExamsList() {
   sub.exams.forEach(ex => {
     const cardCol = document.createElement('div');
     cardCol.className = 'col-12 col-md-6';
+    const isUploader = ex.uploader === currentUser.username;
     const hasEditPermission = currentUser.role === 'super_admin' || (currentUser.role === 'faculty_admin' && currentUser.department === systemState.currentDeptId);
+    const canDelete = hasEditPermission || isUploader;
 
     cardCol.innerHTML = `
       <div class="card glass-card bg-dark-glass border-secondary p-3 text-start">
@@ -1230,17 +1263,20 @@ function loadExamsList() {
           <div>
             <h4 class="h6 fw-bold text-light m-0"><i class="bi bi-file-earmark-ruled text-warning me-2"></i>${ex.year}</h4>
             <span class="small text-secondary d-block mt-1">${ex.questions.length} câu hỏi (Trắc nghiệm / Tự luận)</span>
+            ${ex.uploaderName ? `<span class="small text-info d-block mt-1"><i class="bi bi-person-fill me-1"></i>Đăng bởi: ${ex.uploaderName}</span>` : ''}
           </div>
-          ${hasEditPermission ? `
-            <div class="d-flex gap-1">
+          <div class="d-flex gap-1">
+            ${hasEditPermission ? `
               <button class="btn btn-sm btn-outline-info border-0 rounded-circle" onclick="openEditExamModal(event, '${ex.id}')" title="Sửa đề thi">
                 <i class="bi bi-pencil-square"></i>
               </button>
+            ` : ''}
+            ${canDelete ? `
               <button class="btn btn-sm btn-outline-danger border-0 rounded-circle" onclick="deleteExam(event, '${ex.id}')" title="Xóa đề thi">
                 <i class="bi bi-trash3"></i>
               </button>
-            </div>
-          ` : ''}
+            ` : ''}
+          </div>
         </div>
         <div class="d-flex gap-2">
           <button class="btn btn-primary btn-sm rounded-pill px-3 flex-grow-1" onclick="startSystemExam('${ex.id}', false)">
@@ -1532,8 +1568,21 @@ function handleSaveExam() {
 
 function deleteExam(event, examId) {
   event.stopPropagation();
+  const sub = departments[systemState.currentDeptId].subjects.find(s => s.id === systemState.currentSubjectId);
+  const exam = sub ? sub.exams.find(e => e.id === examId) : null;
+  if (!exam) return;
+
+  const isUploader = exam.uploader === currentUser.username;
+  const hasPermission = currentUser.role === 'super_admin' || 
+                        (currentUser.role === 'faculty_admin' && currentUser.department === systemState.currentDeptId) || 
+                        isUploader;
+
+  if (!hasPermission) {
+    alert('Bạn không có quyền xóa bộ đề thi này!');
+    return;
+  }
+
   if (confirm('Bạn có chắc chắn muốn xóa bộ đề thi này khỏi hệ thống?')) {
-    const sub = departments[systemState.currentDeptId].subjects.find(s => s.id === systemState.currentSubjectId);
     sub.exams = sub.exams.filter(e => e.id !== examId);
     saveDepartments();
     loadExamsList();
@@ -2023,7 +2072,7 @@ async function submitSystemExamDirectly() {
     departmentId: systemState.currentDeptId,
     departmentName: dept.name,
     subjectName: sub.name,
-    examYear: exam.year,
+    examYear: exam ? (exam.year || exam.name || 'Đề thi hệ thống') : 'Đề thi hệ thống',
     score: finalScore,
     totalQuestions: systemState.questions.length,
     correctCount: correctChoice,
@@ -3837,7 +3886,10 @@ function uploadPersonalQuestionsToSystem(deptId, subjectId) {
 
   const newExam = {
     id: 'ex_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+    year: examName.trim(),
     name: examName.trim(),
+    uploader: currentUser ? currentUser.username : 'anonymous',
+    uploaderName: currentUser ? currentUser.name : 'Học viên ẩn danh',
     questions: list.map((q, idx) => {
       const sq = {
         id: 'q_' + Date.now() + '_' + idx + '_' + Math.random().toString(36).substr(2, 9),
