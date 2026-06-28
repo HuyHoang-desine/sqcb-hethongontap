@@ -71,27 +71,61 @@
           </li>
         </ul>
         <div class="d-flex align-items-center gap-3">
-          <div class="d-flex flex-column text-end">
-            <span class="fw-semibold text-info" id="user-display-name">Học viên</span>
-            <span class="small text-secondary" id="user-display-role">Học viên</span>
-          </div>
-          <!-- Theme Toggle Button -->
-          <button type="button" class="btn btn-outline-light btn-sm rounded-circle d-flex align-items-center justify-content-center" id="theme-toggle-btn" onclick="toggleTheme()" title="Chuyển chế độ Sáng/Tối" style="width: 32px; height: 32px;">
-            <i class="bi bi-moon-fill text-white" id="theme-toggle-icon"></i>
-          </button>
-          <button class="btn btn-outline-info btn-sm rounded-pill px-3 d-none" id="btn-edit-profile-name" onclick="openEditProfileNameModal()">
-            <i class="bi bi-person-gear me-1"></i>Sửa họ tên
-          </button>
-          <button class="btn btn-outline-warning btn-sm rounded-pill px-3" onclick="openChangePasswordModal()">
-            <i class="bi bi-key-fill me-1"></i>Đổi mật khẩu
-          </button>
-          <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="logout()">
-            <i class="bi bi-box-arrow-right me-1"></i>Đăng xuất
+          <!-- Button mở sidebar Cá nhân / Menu cài đặt -->
+          <button class="btn btn-dark-glass border-secondary rounded-pill d-flex align-items-center gap-2 px-3 py-1.5 shadow" type="button" data-bs-toggle="offcanvas" data-bs-target="#userSidebar" aria-controls="userSidebar">
+            <img src="logo_sqcb.png?v=2" alt="Avatar" style="width: 28px; height: 28px; object-fit: cover; border-radius: 50%;">
+            <span class="fw-semibold text-light small" id="user-display-name-nav">Tài khoản</span>
+            <i class="bi bi-chevron-down text-secondary small"></i>
           </button>
         </div>
       </div>
     </div>
   </nav>
+
+  <!-- USER PROFILE SIDEBAR (OFFCANVAS) -->
+  <div class="offcanvas offcanvas-end bg-blur-heavy text-light border-start border-secondary" tabindex="-1" id="userSidebar" aria-labelledby="userSidebarLabel" style="background: rgba(15, 23, 42, 0.96); width: 320px; box-shadow: -10px 0 30px rgba(0,0,0,0.5);">
+    <div class="offcanvas-header border-bottom border-secondary py-3">
+      <h5 class="offcanvas-title fw-bold text-info" id="userSidebarLabel">
+        <i class="bi bi-person-circle me-2"></i>Menu Cá nhân
+      </h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column justify-content-between p-4">
+      <div class="d-flex flex-column gap-4">
+        <!-- User Info Header Card -->
+        <div class="p-3 rounded-4 bg-dark-glass border border-secondary text-center">
+          <img src="logo_sqcb.png?v=2" alt="Avatar" class="mb-2 shadow border border-info" style="width: 64px; height: 64px; object-fit: cover; border-radius: 50%;">
+          <h6 class="fw-bold text-light m-0 fs-5" id="user-display-name-sidebar">Học viên</h6>
+          <span class="badge bg-info-glass text-info mt-2 px-2.5 py-1" id="user-display-role-sidebar">Học viên</span>
+        </div>
+        
+        <!-- Menu Navigation List -->
+        <div class="d-flex flex-column gap-2">
+          <button class="btn btn-outline-info w-100 rounded-pill px-3 py-2 text-start d-none" id="sidebar-admin-btn" onclick="navigateTo('admin'); bootstrap.Offcanvas.getInstance(document.getElementById('userSidebar')).hide();">
+            <i class="bi bi-people-fill me-2 text-info"></i>Quản lý Tài khoản
+          </button>
+          
+          <button class="btn btn-outline-warning w-100 rounded-pill px-3 py-2 text-start" onclick="openChangePasswordModal(); bootstrap.Offcanvas.getInstance(document.getElementById('userSidebar')).hide();">
+            <i class="bi bi-key-fill me-2 text-warning"></i>Đổi mật khẩu
+          </button>
+
+          <button class="btn btn-outline-light w-100 rounded-pill px-3 py-2 text-start d-flex justify-content-between align-items-center" onclick="toggleTheme()">
+            <span><i class="bi bi-moon-stars-fill me-2 text-info" id="sidebar-theme-icon"></i>Chế độ Sáng/Tối</span>
+            <span class="small text-secondary" id="sidebar-theme-text">Tối</span>
+          </button>
+
+          <button class="btn btn-outline-success w-100 rounded-pill px-3 py-2 text-start" onclick="checkForUpdates(); bootstrap.Offcanvas.getInstance(document.getElementById('userSidebar')).hide();">
+            <i class="bi bi-arrow-repeat me-2 text-success"></i>Cập nhật ứng dụng
+          </button>
+        </div>
+      </div>
+      
+      <!-- Logout Button at bottom -->
+      <button class="btn btn-danger w-100 rounded-pill py-2.5 fw-bold shadow mt-4" onclick="logout()">
+        <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+      </button>
+    </div>
+  </div>
 
   <!-- MAIN CONTAINER -->
   <main class="container py-4 my-md-3">

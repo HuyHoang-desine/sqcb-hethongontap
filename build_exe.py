@@ -28,7 +28,7 @@ def build():
             print("Loi: Khong the cai dat PyInstaller. Vui long kiem tra ket noi internet.")
             return
 
-    # 2. Chạy PyInstaller để đóng gói desktop_app.py
+    # 2. Chạy PyInstaller để đóng gói desktop_app.py với Icon Trường SQCB
     print("\n[2/3] Dang dong goi ung dung bang PyInstaller (se mat 1-2 phut)...")
     build_cmd = [
         sys.executable,
@@ -37,6 +37,7 @@ def build():
         "--onefile",
         "--noconsole",
         "--name=SmartStudy",
+        "--icon=logo_sqcb.png",
         "desktop_app.py"
     ]
     
@@ -45,7 +46,7 @@ def build():
         exe_path = os.path.join("dist", "SmartStudy.exe")
         print(f"-> File ung dung da duoc tao tai: {os.path.abspath(exe_path)}")
         
-        # Sao chép url.txt sang thư mục dist bên cạnh file .exe để tiện kiểm tra
+        # Sao chép url.txt và logo_sqcb.png sang thư mục dist bên cạnh file .exe để tiện kiểm tra
         try:
             if os.path.exists("url.txt"):
                 dist_dir = "dist"
@@ -53,10 +54,16 @@ def build():
                 with open("url.txt", "r", encoding="utf-8") as src, open(dest_file, "w", encoding="utf-8") as dst:
                     dst.write(src.read())
                 print(f"-> Da sao chep file url.txt sang: {os.path.abspath(dest_file)}")
-        except Exception as e:
-            print(f"Loi khi copy url.txt: {e}")
             
-        print("\n=> Ban co the gui file 'dist/SmartStudy.exe' va 'dist/url.txt' cho hoc vien.")
+            if os.path.exists("logo_sqcb.png"):
+                import shutil
+                dest_logo = os.path.join("dist", "logo_sqcb.png")
+                shutil.copy("logo_sqcb.png", dest_logo)
+                print(f"-> Da sao chep file logo_sqcb.png sang: {os.path.abspath(dest_logo)}")
+        except Exception as e:
+            print(f"Loi khi copy file ho tro: {e}")
+            
+        print("\n=> Ban co the gui file 'dist/SmartStudy.exe', 'dist/url.txt' va 'dist/logo_sqcb.png' cho hoc vien.")
         print("Hoc vien chi can click dup vao SmartStudy.exe de vao hoc.")
     else:
         print("\nLoi: Bien dich that bai. Vui long xem log loi o tren.")

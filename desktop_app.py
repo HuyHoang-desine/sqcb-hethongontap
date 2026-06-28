@@ -2,15 +2,30 @@ import sys
 import os
 from PySide6.QtCore import QUrl
 from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtGui import QIcon
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWebEngineCore import QWebEngineSettings
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Học Tập Thông Minh - SmartStudy")
+        
+        # Xác định thư mục cơ sở (Base Directory) của ứng dụng
+        if getattr(sys, 'frozen', False):
+            # Đang chạy từ file .exe đã biên dịch
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            # Đang chạy từ script python thông thường
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            
+        self.setWindowTitle("Hệ thống đề cương - Trường SQCB")
         self.resize(1100, 800)
         
+        # Thiết lập Icon cho cửa sổ và Thanh tác vụ (Taskbar)
+        icon_path = os.path.join(base_dir, "logo_sqcb.png")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QIcon(icon_path))
+            
         # Tạo Web View để hiển thị ứng dụng
         self.web_view = QWebEngineView()
         
@@ -24,15 +39,6 @@ class MainWindow(QMainWindow):
         settings.setAttribute(QWebEngineSettings.LocalStorageEnabled, True)
         settings.setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True)
         settings.setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True)
-        
-        # Xác định URL kết nối
-        # Đọc URL từ tệp cấu hình url.txt nếu có, nếu không thì dùng url mặc định
-        if getattr(sys, 'frozen', False):
-            # Đang chạy từ file .exe đã biên dịch
-            base_dir = os.path.dirname(sys.executable)
-        else:
-            # Đang chạy từ script python thông thường
-            base_dir = os.path.dirname(os.path.abspath(__file__))
             
         url_file = os.path.join(base_dir, "url.txt")
         target_url = "http://localhost:5000" # Mặc định

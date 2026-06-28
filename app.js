@@ -288,7 +288,6 @@ function fillDemoAcc(username, password) {
 
 // Helper setup UI sau khi đăng nhập thành công
 function setupLoggedInUI(user) {
-  document.getElementById('user-display-name').innerText = user.name;
   let roleText = 'Học viên';
   if (user.role === 'super_admin') {
     roleText = 'Cán bộ';
@@ -297,17 +296,16 @@ function setupLoggedInUI(user) {
   } else if (user.role === 'faculty_admin') {
     roleText = `Giáo viên ${user.department}`;
   }
-  document.getElementById('user-display-role').innerText = roleText;
 
-  // Toggle hiển thị nút Sửa họ tên
-  const editNameBtn = document.getElementById('btn-edit-profile-name');
-  if (editNameBtn) {
-    if (user.role === 'super_admin' || user.role === 'development') {
-      editNameBtn.classList.remove('d-none');
-    } else {
-      editNameBtn.classList.add('d-none');
-    }
-  }
+  // Cập nhật thông tin hiển thị trên navbar và sidebar
+  const nameNav = document.getElementById('user-display-name-nav');
+  if (nameNav) nameNav.innerText = user.name;
+  
+  const nameSidebar = document.getElementById('user-display-name-sidebar');
+  if (nameSidebar) nameSidebar.innerText = user.name;
+
+  const roleSidebar = document.getElementById('user-display-role-sidebar');
+  if (roleSidebar) roleSidebar.innerText = roleText;
 
   // Hiển thị Navbar và cấu hình các tab đặc quyền
   const mainNav = document.getElementById('main-nav');
@@ -317,13 +315,23 @@ function setupLoggedInUI(user) {
   const resultsNav = document.getElementById('nav-results-item');
   if (resultsNav) resultsNav.classList.remove('d-none');
 
-  // Phân quyền Tab Quản lý tài khoản (Chỉ Admin và Dev được xem)
+  // Phân quyền Tab Quản lý tài khoản trên Navbar
   const adminNav = document.getElementById('nav-admin-item');
   if (adminNav) {
     if (user.role === 'super_admin' || user.role === 'development') {
       adminNav.classList.remove('d-none');
     } else {
       adminNav.classList.add('d-none');
+    }
+  }
+
+  // Phân quyền Nút Quản lý tài khoản trên Sidebar
+  const sidebarAdminBtn = document.getElementById('sidebar-admin-btn');
+  if (sidebarAdminBtn) {
+    if (user.role === 'super_admin' || user.role === 'development') {
+      sidebarAdminBtn.classList.remove('d-none');
+    } else {
+      sidebarAdminBtn.classList.add('d-none');
     }
   }
 }
@@ -4401,23 +4409,31 @@ function applyTheme() {
   const savedTheme = localStorage.getItem('study_theme') || 'dark'; // mặc định là dark
   const body = document.body;
   const icon = document.getElementById('theme-toggle-icon');
+  const sidebarThemeText = document.getElementById('sidebar-theme-text');
+  const sidebarThemeIcon = document.getElementById('sidebar-theme-icon');
   
   if (savedTheme === 'dark') {
     body.classList.add('dark-mode');
     if (icon) {
       icon.className = 'bi bi-sun-fill text-warning';
     }
+    if (sidebarThemeText) sidebarThemeText.innerText = 'Tối';
+    if (sidebarThemeIcon) sidebarThemeIcon.className = 'bi bi-moon-stars-fill me-2 text-info';
   } else {
     body.classList.remove('dark-mode');
     if (icon) {
       icon.className = 'bi bi-moon-fill text-white';
     }
+    if (sidebarThemeText) sidebarThemeText.innerText = 'Sáng';
+    if (sidebarThemeIcon) sidebarThemeIcon.className = 'bi bi-sun-fill me-2 text-warning';
   }
 }
 
 function toggleTheme() {
   const body = document.body;
   const icon = document.getElementById('theme-toggle-icon');
+  const sidebarThemeText = document.getElementById('sidebar-theme-text');
+  const sidebarThemeIcon = document.getElementById('sidebar-theme-icon');
   
   if (body.classList.contains('dark-mode')) {
     body.classList.remove('dark-mode');
@@ -4425,12 +4441,16 @@ function toggleTheme() {
     if (icon) {
       icon.className = 'bi bi-moon-fill text-white';
     }
+    if (sidebarThemeText) sidebarThemeText.innerText = 'Sáng';
+    if (sidebarThemeIcon) sidebarThemeIcon.className = 'bi bi-sun-fill me-2 text-warning';
   } else {
     body.classList.add('dark-mode');
     localStorage.setItem('study_theme', 'dark');
     if (icon) {
       icon.className = 'bi bi-sun-fill text-warning';
     }
+    if (sidebarThemeText) sidebarThemeText.innerText = 'Tối';
+    if (sidebarThemeIcon) sidebarThemeIcon.className = 'bi bi-moon-stars-fill me-2 text-info';
   }
 }
 
@@ -4455,4 +4475,10 @@ async function initializeApp() {
   }
 }
 initializeApp();
+
+function checkForUpdates() {
+  if (confirm("Hệ thống sẽ chuyển hướng bạn tới liên kết tải về phiên bản phần mềm (Desktop App) mới nhất. Bạn có muốn tiếp tục?")) {
+    window.location.href = "/download/app";
+  }
+}
 
