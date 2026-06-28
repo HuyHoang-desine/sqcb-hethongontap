@@ -2638,6 +2638,62 @@ function updateLoginAnnouncement() {
   }
 }
 
+function openChangePasswordModal() {
+  const modalEl = document.getElementById('changePasswordModal');
+  if (modalEl) {
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+  }
+}
+
+function handleChangePassword(event) {
+  event.preventDefault();
+  const newPw = document.getElementById('cp-new-password').value;
+  const confirmPw = document.getElementById('cp-confirm-password').value;
+  
+  if (newPw.length < 6) {
+    alert('Mật khẩu mới phải có tối thiểu 6 ký tự!');
+    return;
+  }
+  
+  if (newPw !== confirmPw) {
+    alert('Xác nhận mật khẩu mới không khớp!');
+    return;
+  }
+  
+  if (!currentUser) {
+    alert('Vui lòng đăng nhập để đổi mật khẩu!');
+    return;
+  }
+  
+  const userIdx = accounts.findIndex(acc => acc.username === currentUser.username);
+  if (userIdx !== -1) {
+    accounts[userIdx].password = newPw;
+    currentUser.password = newPw;
+    localStorage.setItem('study_current_user', JSON.stringify(currentUser));
+    
+    // Đồng bộ dữ liệu
+    saveDataToServer();
+    
+    alert('Đổi mật khẩu thành công!');
+    
+    // Đóng modal
+    const modalEl = document.getElementById('changePasswordModal');
+    if (modalEl) {
+      let modal = bootstrap.Modal.getInstance(modalEl);
+      if (!modal) {
+        modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+      }
+      modal.hide();
+    }
+    
+    // Reset form
+    document.getElementById('change-password-form').reset();
+  } else {
+    alert('Không tìm thấy tài khoản tương ứng trên hệ thống!');
+  }
+}
+
 function toggleNewUserDeptField() {
   const role = document.getElementById('new-role').value;
   const deptContainer = document.getElementById('new-user-dept-container');
